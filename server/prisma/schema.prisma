@@ -28,10 +28,24 @@ model Admin {
   deletedAt DateTime?
 
   genderId Int 
+  gradeId Int
 
   Gender Gender @relation(fields: [genderId], references: [id])
+  Grade Grade @relation(fields: [gradeId], references: [id])
 
   MainPosting MainPosting[]
+}
+
+model Gender {
+  id Int @id @default(autoincrement())
+  name String @unique
+  Admin Admin[]
+}
+
+model Grade {
+  id Int @id @default(autoincrement())
+  name String @unique
+  Admin Admin[]
 }
 
 model MainPosting {
@@ -51,16 +65,10 @@ model MainPosting {
 
 }
 
-model Gender {
-  id Int @id @default(autoincrement())
-  name String @unique
-  Admin Admin[]
-}
-
 model MainPostingCategory {
   id Int @id @default(autoincrement())
   name String @unique
-  orderId Int? // 해당 카테고리의 분류번호를 나타냄. 분류번호가 낮을 수록 맨 위에 해당 카테고리가 위치함.
+  orderId Int // 해당 카테고리의 분류번호를 나타냄. 분류번호가 낮을 수록 맨 위에 해당 카테고리가 위치함.
 
   parentId Int?
 
