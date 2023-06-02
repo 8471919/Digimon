@@ -17,7 +17,7 @@ model Admin {
   firstName String
   middle_name String?
   last_name String
-  nickname String
+  nickname String @unique
   introduction String? @db.Text
   birth DateTime @db.Date
   
@@ -31,10 +31,10 @@ model Admin {
 
   Gender Gender @relation(fields: [genderId], references: [id])
 
-  AdminPosting AdminPosting[]
+  MainPosting MainPosting[]
 }
 
-model AdminPosting {
+model MainPosting {
   id BigInt @id @default(autoincrement())
   title String
   content String @db.Text
@@ -46,20 +46,23 @@ model AdminPosting {
   categoryId Int
   adminId Int
 
-  AdminPostingCategory AdminPostingCategory @relation(fields: [categoryId], references: [id])
+  MainPostingCategory MainPostingCategory @relation(fields: [categoryId], references: [id])
   Admin Admin @relation(fields: [adminId], references: [id])
 
 }
 
 model Gender {
   id Int @id @default(autoincrement())
-  name String
+  name String @unique
   Admin Admin[]
 }
 
-model AdminPostingCategory {
+model MainPostingCategory {
   id Int @id @default(autoincrement())
-  name String
+  name String @unique
+  orderId Int? // 해당 카테고리의 분류번호를 나타냄. 분류번호가 낮을 수록 맨 위에 해당 카테고리가 위치함.
 
-  AdminPosting AdminPosting[]
+  parentId Int?
+
+  MainPosting MainPosting[]
 }
