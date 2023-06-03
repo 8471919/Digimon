@@ -63,6 +63,7 @@ model MainPosting {
   MainPostingCategory MainPostingCategory @relation(fields: [categoryId], references: [id])
   Admin Admin @relation(fields: [adminId], references: [id])
 
+  MainPostingReport MainPostingReport[]
 }
 
 model MainPostingCategory {
@@ -73,4 +74,14 @@ model MainPostingCategory {
   parentId Int?
 
   MainPosting MainPosting[]
+}
+
+model MainPostingReport {
+  id BigInt @id @default(autoincrement())
+  title String 
+  content String @db.Text
+
+  mainPostingId BigInt
+
+  MainPosting MainPosting @relation(fields: [mainPostingId], references: [id])
 }
