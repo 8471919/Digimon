@@ -31,7 +31,7 @@ model Admin {
   gradeId Int
 
   Gender Gender @relation(fields: [genderId], references: [id])
-  Grade Grade @relation(fields: [gradeId], references: [id])
+  AdminGrade AdminGrade @relation(fields: [gradeId], references: [id])
 
   MainPosting MainPosting[]
 }
@@ -42,7 +42,7 @@ model Gender {
   Admin Admin[]
 }
 
-model Grade {
+model AdminGrade {
   id Int @id @default(autoincrement())
   name String @unique
   Admin Admin[]
