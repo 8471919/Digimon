@@ -5,14 +5,15 @@ import {
 } from 'src/database/repositories/outbound-ports/admin-repository.outbound-port';
 import bcrypt from 'bcrypt';
 import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
-import { Admin } from '@prisma/client';
-import typia from 'typia';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(ADMIN_REPOSITORY_OUTBOUND_PORT)
     private readonly adminRepo: AdminRepositoryOutboundPort,
+
+    private readonly jwtService: JwtService,
   ) {}
 
   async validateAdmin(email: string, password: string): Promise<AdminLogInDto> {
@@ -34,5 +35,12 @@ export class AuthService {
       nickname: admin.nickname,
       gradeId: admin.genderId,
     } as const;
+  }
+
+  async adminSignIn(user: AdminLogInDto): Promise<{ accessToken: string }> {
+    const payload = { ...user };
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
   }
 }
