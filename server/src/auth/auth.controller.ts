@@ -9,7 +9,7 @@ export class AuthController {
 
   @UseGuards(AdminGuard)
   @TypedRoute.Post('sign-up')
-  async signUp(@Req() req) {
+  async adminSignIn(@Req() req) {
     console.log(req.user);
     return req.user;
   }
