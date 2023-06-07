@@ -6,6 +6,8 @@ export const ADMIN_REPOSITORY_OUTBOUND_PORT =
   'ADMIN_REPOSITORY_OUTBOUND_PORT' as const;
 
 export interface AdminRepositoryOutboundPort {
+  findOneAdminForSignUp(email: string): Promise<Admin | null>;
+
   findOneAdminByOptions(
     options: AdminOptionsDto,
   ): Promise<FindOneAdminByOptionsOutputDto | null>;
