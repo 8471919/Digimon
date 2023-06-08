@@ -5,14 +5,13 @@ import { AdminGuard } from './guards/admin.guard';
 import { User } from 'src/common/decorators/user.decorator';
 import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
 
-@Controller('auth')
+@Controller('api/v1/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(AdminGuard)
-  @TypedRoute.Post('sign-in')
+  @TypedRoute.Post('admin-login')
   async adminSignIn(@User() user: AdminLogInDto) {
-    console.log(user);
     const token = await this.authService.adminSignIn(user);
 
     return token;
