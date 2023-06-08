@@ -24,7 +24,6 @@
   "dependencies": {
     "@nestia/core": "^1.2.4",
     "@nestjs/common": "^9.0.0",
-    "@nestjs/config": "^2.3.2",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/passport": "^9.0.3",
@@ -45,7 +44,6 @@
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
-    "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.13",
     "@types/jest": "28.1.8",
     "@types/node": "^16.0.0",
@@ -77,7 +75,7 @@
       "ts"
     ],
     "moduleNameMapper": {
-      "src/(.*)": "<roodDir>/$1"
+      "src/(.*)": "<rootDir>/$1"
     },
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
