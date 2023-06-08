@@ -11,7 +11,7 @@ import { Admin } from '@prisma/client';
 export class AdminRepository implements AdminRepositoryOutboundPort {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findOneAdminForSignUp(email: string): Promise<Admin | null> {
+  async findOneAdminForSign(email: string): Promise<Admin | null> {
     const admin = await this.prisma.admin.findFirst({
       where: { email },
     });

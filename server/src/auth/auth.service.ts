@@ -17,7 +17,7 @@ export class AuthService {
   ) {}
 
   async validateAdmin(email: string, password: string): Promise<AdminLogInDto> {
-    const admin = await this.adminRepo.findOneAdminForSignUp(email);
+    const admin = await this.adminRepo.findOneAdminForSign(email);
 
     if (!admin) {
       throw new BadRequestException('email is incorrect.');
