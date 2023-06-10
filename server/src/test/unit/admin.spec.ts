@@ -14,7 +14,7 @@ import typia from 'typia';
  * 어차피, pop으로 변수에 한 번 할당하면, 해당 변수를 이용해서 동일한 값을 재사용 할 수 있으니까.
  */
 type MockAdminRepositoryParamType = {
-  inserAdmin?: Array<FindOneAdminExceptPasswordDto>;
+  insertAdmin?: Array<FindOneAdminExceptPasswordDto>;
   findOneAdminForSign?: Array<Admin | null>;
   findOneAdminByOptions?: Array<FindOneAdminExceptPasswordDto | null>;
 };
@@ -29,8 +29,8 @@ class MockAdminRepository implements AdminRepositoryOutboundPort {
   async insertAdmin(
     adminInfo: AdminSignUpInputDto,
   ): Promise<FindOneAdminExceptPasswordDto | null> {
-    const res = this.result.inserAdmin?.pop();
-    if (!res) {
+    const res = this.result.insertAdmin?.pop();
+    if (!res && res !== null) {
       throw new Error('undefined');
     }
 
@@ -38,7 +38,7 @@ class MockAdminRepository implements AdminRepositoryOutboundPort {
   }
   async findOneAdminForSign(email: string): Promise<Admin | null> {
     const res = this.result.findOneAdminForSign?.pop();
-    if (!res) {
+    if (!res && res !== null) {
       throw new Error('undefined');
     }
 
@@ -48,7 +48,7 @@ class MockAdminRepository implements AdminRepositoryOutboundPort {
     options: Partial<Pick<Admin, 'id' | 'email' | 'nickname' | 'gradeId'>>,
   ): Promise<FindOneAdminExceptPasswordDto | null> {
     const res = this.result.findOneAdminByOptions?.pop();
-    if (!res) {
+    if (!res && res !== null) {
       throw new Error('undefined');
     }
 
@@ -91,5 +91,46 @@ describe('Admin Spec', () => {
 
   describe('5. Read Admin for common user', () => {
     it.todo('5-1. 일반 유저들을 위한 어드민 정보를 불러옵니다.');
+  });
+
+  describe('6. Admin Sign up', () => {
+    it('6-1. Sign up by Master admin', async () => {
+      const user: AdminLogInDto = {
+        id: 1,
+        email: 'master@gmail.com',
+        gradeId: 1,
+        nickname: 'king',
+      };
+
+      const body: AdminSignUpInputDto = typia.random<AdminSignUpInputDto>();
+
+      const existedAdmin = null;
+
+      const createdAdmin: FindOneAdminExceptPasswordDto = {
+        ...body,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 2,
+        deletedAt: null,
+        introduction: null,
+        middleName: null,
+        birth: new Date(),
+      };
+
+      const authService = new AuthService(
+        new MockAdminRepository({
+          findOneAdminForSign: [existedAdmin],
+          insertAdmin: [createdAdmin],
+        }),
+        new JwtService({
+          secret: 'secret',
+        }),
+      );
+
+      const authController = new AuthController(authService);
+      const res = await authController.signUpByMaster(user, body);
+
+      expect(res).toStrictEqual(createdAdmin);
+    });
   });
 });
