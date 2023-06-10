@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { AdminJwtDto } from 'src/database/dtos/auth/admin-login.dto';
+import { ADMIN_GRADE } from 'src/database/values/admin-grade.value';
 
 @Injectable()
 export class JwtMasterAdminStratety extends PassportStrategy(
@@ -16,7 +18,16 @@ export class JwtMasterAdminStratety extends PassportStrategy(
     });
   }
 
-  async validate(payload) {
+  async validate(payload: AdminJwtDto) {
     const { iat, exp, ...user } = payload;
+    if (user.type !== 'admin') {
+      throw new BadRequestException('UnAuthorized');
+    }
+
+    if (user.gradeId !== ADMIN_GRADE.master) {
+      throw new BadRequestException('UnAuthorized');
+    }
+
+    return user;
   }
 }

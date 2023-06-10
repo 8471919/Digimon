@@ -8,6 +8,7 @@ import { AdminRepository } from 'src/database/repositories/admin.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtAdminStrategy } from './strategies/jwt-admin.strategy';
+import { JwtMasterAdminStratety } from './strategies/jwt-master-admin.strategy';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { JwtAdminStrategy } from './strategies/jwt-admin.strategy';
     AuthService,
     AdminStrategy,
     JwtAdminStrategy,
+    JwtMasterAdminStratety,
   ],
 })
 export class AuthModule {}

@@ -3,7 +3,10 @@ import {
   ADMIN_REPOSITORY_OUTBOUND_PORT,
   AdminRepositoryOutboundPort,
 } from 'src/database/repositories/outbound-ports/admin-repository.outbound-port';
-import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
+import {
+  AdminJwtDto,
+  AdminLogInDto,
+} from 'src/database/dtos/auth/admin-login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AdminSignUpInputDto } from 'src/database/dtos/admin/admin.inbound-port.dto';
 import { FindOneAdminExceptPasswordDto } from 'src/database/dtos/admin/admin.outbound-port.dto';
@@ -40,7 +43,10 @@ export class AuthService {
   }
 
   async adminSignIn(user: AdminLogInDto): Promise<{ accessToken: string }> {
-    const payload = { ...user };
+    const payload: Omit<AdminJwtDto, 'iat' | 'exp'> = {
+      type: 'admin',
+      ...user,
+    };
     return {
       accessToken: this.jwtService.sign(payload),
     };
