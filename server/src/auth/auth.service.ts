@@ -67,7 +67,7 @@ export class AuthService {
 
     adminInfo.password = hashedPassword;
 
-    adminInfo.birth = new Date(adminInfo.birth);
+    adminInfo.birth = new Date(adminInfo.birth).toISOString();
 
     const createdAdmin = await this.adminRepo.insertAdmin(adminInfo);
 
