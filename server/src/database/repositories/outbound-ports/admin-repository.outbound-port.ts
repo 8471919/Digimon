@@ -2,6 +2,7 @@ import { Admin } from '@prisma/client';
 import { AdminOptionsDto } from 'src/database/dtos/admin/admin-options.dto';
 import { AdminSignUpInputDto } from 'src/database/dtos/admin/admin.inbound-port.dto';
 import { FindOneAdminExceptPasswordDto } from 'src/database/dtos/admin/admin.outbound-port.dto';
+import { DateKeyToString } from 'src/utils/types/date-to-string.type';
 
 export const ADMIN_REPOSITORY_OUTBOUND_PORT =
   'ADMIN_REPOSITORY_OUTBOUND_PORT' as const;
@@ -11,7 +12,7 @@ export interface AdminRepositoryOutboundPort {
     adminInfo: AdminSignUpInputDto,
   ): Promise<FindOneAdminExceptPasswordDto | null>;
 
-  findOneAdminForSign(email: string): Promise<Admin | null>;
+  findOneAdminForSign(email: string): Promise<DateKeyToString<Admin> | null>;
 
   findOneAdminByOptions(
     options: AdminOptionsDto,

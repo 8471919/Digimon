@@ -1,7 +1,8 @@
 import { Admin } from '@prisma/client';
+import { DateKeyToString } from 'src/utils/types/date-to-string.type';
 
-export interface AdminSignUpInputDto
-  extends Omit<
+export type AdminSignUpInputDto = DateKeyToString<
+  Omit<
     Pick<
       Admin,
       | 'email'
@@ -12,12 +13,9 @@ export interface AdminSignUpInputDto
       | 'emailReception'
       | 'genderId'
       | 'gradeId'
+      | 'birth'
     > &
       Partial<Pick<Admin, 'middleName' | 'introduction'>>,
     never
-  > {
-  /**
-   * @format date
-   */
-  birth: string | Date;
-}
+  >
+>;

@@ -6,6 +6,9 @@ import { AdminSignUpInputDto } from 'src/database/dtos/admin/admin.inbound-port.
 import { FindOneAdminExceptPasswordDto } from 'src/database/dtos/admin/admin.outbound-port.dto';
 import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
 import { AdminRepositoryOutboundPort } from 'src/database/repositories/outbound-ports/admin-repository.outbound-port';
+import { AdminController } from 'src/domain/admin/admin.controller';
+import { AdminService } from 'src/domain/admin/admin.service';
+import { DateKeyToString } from 'src/utils/types/date-to-string.type';
 import typia from 'typia';
 
 /**
@@ -15,7 +18,7 @@ import typia from 'typia';
  */
 type MockAdminRepositoryParamType = {
   insertAdmin?: Array<FindOneAdminExceptPasswordDto>;
-  findOneAdminForSign?: Array<Admin | null>;
+  findOneAdminForSign?: Array<DateKeyToString<Admin> | null>;
   findOneAdminByOptions?: Array<FindOneAdminExceptPasswordDto | null>;
 };
 
@@ -36,7 +39,9 @@ class MockAdminRepository implements AdminRepositoryOutboundPort {
 
     return res;
   }
-  async findOneAdminForSign(email: string): Promise<Admin | null> {
+  async findOneAdminForSign(
+    email: string,
+  ): Promise<DateKeyToString<Admin> | null> {
     const res = this.result.findOneAdminForSign?.pop();
     if (!res && res !== null) {
       throw new Error('undefined');
@@ -76,7 +81,23 @@ describe('Admin Spec', () => {
   });
 
   describe('2. Read Admin for self', () => {
-    it.todo('2-1. 어드민 자신의 정보를 불러옵니다.');
+    it('2-1. 어드민 자신의 정보를 불러옵니다.', async () => {
+      const userInfo = typia.random<FindOneAdminExceptPasswordDto>();
+
+      const user: AdminLogInDto = {
+        id: userInfo.id,
+        email: userInfo.email,
+        nickname: userInfo.nickname,
+        gradeId: userInfo.gradeId,
+      };
+      const adminService = new AdminService(
+        new MockAdminRepository({ findOneAdminByOptions: [userInfo] }),
+      );
+      const adminController = new AdminController(adminService);
+      const res = await adminController.getAdminInfoForSelf(user, user.id);
+
+      expect(res).toStrictEqual(userInfo);
+    });
   });
 
   describe('3. Update Admin', () => {
@@ -95,26 +116,26 @@ describe('Admin Spec', () => {
 
   describe('6. Admin Sign up', () => {
     it('6-1. Sign up by Master admin', async () => {
-      const user: AdminLogInDto = {
+      const master: AdminLogInDto = {
         id: 1,
         email: 'master@gmail.com',
         gradeId: 1,
         nickname: 'king',
       };
 
-      const body: AdminSignUpInputDto = typia.random<AdminSignUpInputDto>();
+      const body = typia.random<AdminSignUpInputDto>();
 
       const existedAdmin = null;
 
       const createdAdmin: FindOneAdminExceptPasswordDto = {
         ...body,
-        createdAt: new Date(),
-        updatedAt: new Date(),
         id: 2,
+        gradeId: 2,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         deletedAt: null,
         introduction: null,
         middleName: null,
-        birth: new Date(),
       };
 
       const authService = new AuthService(
@@ -128,7 +149,7 @@ describe('Admin Spec', () => {
       );
 
       const authController = new AuthController(authService);
-      const res = await authController.signUpByMaster(user, body);
+      const res = await authController.signUpByMaster(master, body);
 
       expect(res).toStrictEqual(createdAdmin);
     });
