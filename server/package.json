@@ -37,7 +37,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "typia": "^4.0.3"
+    "typia": "^4.0.8"
   },
   "devDependencies": {
     "@nestia/e2e": "^0.3.0",

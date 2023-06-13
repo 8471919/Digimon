@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { AdminRepositoryOutboundPort } from './outbound-ports/admin-repository.outbound-port';
 import { AdminOptionsDto } from '../dtos/admin/admin-options.dto';
@@ -7,6 +7,8 @@ import typia from 'typia';
 import { TypeToSelect } from 'src/utils/types/type-to-select.type';
 import { Admin } from '@prisma/client';
 import { AdminSignUpInputDto } from '../dtos/admin/admin.inbound-port.dto';
+import { DateKeyToString } from 'src/utils/types/date-to-string.type';
+import { dateNullToStringNull } from 'src/utils/functions/date-null-to-string-null.function';
 
 @Injectable()
 export class AdminRepository implements AdminRepositoryOutboundPort {
@@ -20,15 +22,33 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
       select: typia.random<TypeToSelect<FindOneAdminExceptPasswordDto>>(),
     });
 
-    return admin;
+    return {
+      ...admin,
+      createdAt: dateNullToStringNull(admin.createdAt),
+      updatedAt: dateNullToStringNull(admin.updatedAt),
+      deletedAt: dateNullToStringNull(admin.deletedAt),
+      birth: admin.birth.toISOString(),
+    };
   }
 
-  async findOneAdminForSign(email: string): Promise<Admin | null> {
+  async findOneAdminForSign(
+    email: string,
+  ): Promise<DateKeyToString<Admin> | null> {
     const admin = await this.prisma.admin.findFirst({
       where: { email },
     });
 
-    return admin;
+    if (!admin) {
+      throw new BadRequestException('email is wrong');
+    }
+
+    return {
+      ...admin,
+      createdAt: dateNullToStringNull(admin.createdAt),
+      updatedAt: dateNullToStringNull(admin.updatedAt),
+      deletedAt: dateNullToStringNull(admin.deletedAt),
+      birth: admin.birth.toISOString(),
+    };
   }
 
   async findOneAdminByOptions(
@@ -39,6 +59,16 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
       where: options,
     });
 
-    return admin;
+    if (!admin) {
+      throw new BadRequestException('Incorrect options');
+    }
+
+    return {
+      ...admin,
+      createdAt: dateNullToStringNull(admin.createdAt),
+      updatedAt: dateNullToStringNull(admin.updatedAt),
+      deletedAt: dateNullToStringNull(admin.deletedAt),
+      birth: admin.birth.toISOString(),
+    };
   }
 }
