@@ -2,13 +2,16 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { AdminRepositoryOutboundPort } from './outbound-ports/admin-repository.outbound-port';
 import { AdminOptionsDto } from '../dtos/admin/admin-options.dto';
-import { FindOneAdminExceptPasswordDto } from '../dtos/admin/admin.outbound-port.dto';
+import {
+  FindAdminInfoForCommonDto,
+  FindOneAdminExceptPasswordDto,
+} from '../dtos/admin/admin.outbound-port.dto';
 import typia from 'typia';
 import { TypeToSelect } from 'src/utils/types/type-to-select.type';
 import { Admin } from '@prisma/client';
 import { AdminSignUpInputDto } from '../dtos/admin/admin.inbound-port.dto';
 import { DateKeyToString } from 'src/utils/types/date-to-string.type';
-import { dateNullToStringNull } from 'src/utils/functions/date-null-to-string-null.function';
+import { dateKeyToString } from 'src/utils/functions/date-key-to-string.function';
 
 @Injectable()
 export class AdminRepository implements AdminRepositoryOutboundPort {
@@ -22,13 +25,7 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
       select: typia.random<TypeToSelect<FindOneAdminExceptPasswordDto>>(),
     });
 
-    return {
-      ...admin,
-      createdAt: dateNullToStringNull(admin.createdAt),
-      updatedAt: dateNullToStringNull(admin.updatedAt),
-      deletedAt: dateNullToStringNull(admin.deletedAt),
-      birth: admin.birth.toISOString(),
-    };
+    return dateKeyToString(admin);
   }
 
   async findOneAdminForSign(
@@ -42,13 +39,7 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
       throw new BadRequestException('email is wrong');
     }
 
-    return {
-      ...admin,
-      createdAt: dateNullToStringNull(admin.createdAt),
-      updatedAt: dateNullToStringNull(admin.updatedAt),
-      deletedAt: dateNullToStringNull(admin.deletedAt),
-      birth: admin.birth.toISOString(),
-    };
+    return dateKeyToString(admin);
   }
 
   async findOneAdminByOptions(
@@ -63,12 +54,21 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
       throw new BadRequestException('Incorrect options');
     }
 
-    return {
-      ...admin,
-      createdAt: dateNullToStringNull(admin.createdAt),
-      updatedAt: dateNullToStringNull(admin.updatedAt),
-      deletedAt: dateNullToStringNull(admin.deletedAt),
-      birth: admin.birth.toISOString(),
-    };
+    return dateKeyToString(admin);
+  }
+
+  async findOneAdminForCommon(
+    options: AdminOptionsDto,
+  ): Promise<FindAdminInfoForCommonDto | null> {
+    const admin = await this.prisma.admin.findFirst({
+      select: typia.random<TypeToSelect<FindAdminInfoForCommonDto>>(),
+      where: options,
+    });
+
+    if (!admin) {
+      throw new BadRequestException('Incorrect options');
+    }
+
+    return dateKeyToString(admin);
   }
 }
