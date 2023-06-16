@@ -5,7 +5,7 @@ import {
   FindAdminInfoForCommonDto,
   FindOneAdminExceptPasswordDto,
 } from 'src/database/dtos/admin/admin.outbound-port.dto';
-import { DateKeyToString } from 'src/utils/types/date-to-string.type';
+import { DateAndBigIntToString } from 'src/utils/types/date-to-string.type';
 
 export const ADMIN_REPOSITORY_OUTBOUND_PORT =
   'ADMIN_REPOSITORY_OUTBOUND_PORT' as const;
@@ -15,7 +15,9 @@ export interface AdminRepositoryOutboundPort {
     adminInfo: AdminSignUpInputDto,
   ): Promise<FindOneAdminExceptPasswordDto | null>;
 
-  findOneAdminForSign(email: string): Promise<DateKeyToString<Admin> | null>;
+  findOneAdminForSign(
+    email: string,
+  ): Promise<DateAndBigIntToString<Admin> | null>;
 
   findOneAdminByOptions(
     options: AdminOptionsDto,

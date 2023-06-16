@@ -1,11 +1,11 @@
 import { Admin, MainPosting } from '@prisma/client';
-import { DateKeyToString } from 'src/utils/types/date-to-string.type';
+import { DateAndBigIntToString } from 'src/utils/types/date-to-string.type';
 
-export type FindOneAdminExceptPasswordDto = DateKeyToString<
+export type FindOneAdminExceptPasswordDto = DateAndBigIntToString<
   Omit<Admin, 'password'>
 >;
 
 export interface FindAdminInfoForCommonDto
   extends Pick<Admin, 'id' | 'nickname' | 'introduction'> {
-  mainPostings: DateKeyToString<MainPosting>[];
+  mainPostings: DateAndBigIntToString<MainPosting>[];
 }
