@@ -1,8 +1,12 @@
 import { DateAndBigIntToString } from '../types/date-to-string.type';
 
 export function dateAndBigIntToString<T extends object>(
-  target: T,
-): DateAndBigIntToString<T> {
+  target: T | null,
+): DateAndBigIntToString<T> | null {
+  if (target === null) {
+    return null;
+  }
+
   try {
     const res = Object.entries(target).reduce((acc, [key, value]) => {
       if (value === null) {
