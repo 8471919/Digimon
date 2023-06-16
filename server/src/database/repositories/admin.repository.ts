@@ -8,10 +8,9 @@ import {
 } from '../dtos/admin/admin.outbound-port.dto';
 import typia from 'typia';
 import { TypeToSelect } from 'src/utils/types/type-to-select.type';
-import { Admin } from '@prisma/client';
 import { AdminSignUpInputDto } from '../dtos/admin/admin.inbound-port.dto';
-import { DateAndBigIntToString } from 'src/utils/types/date-to-string.type';
 import { dateAndBigIntToString } from 'src/utils/functions/date-and-bigint-to-string.function';
+import { AdminEntity } from '../models/admin/admin.entity';
 
 @Injectable()
 export class AdminRepository implements AdminRepositoryOutboundPort {
@@ -28,16 +27,10 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
     return dateAndBigIntToString(admin);
   }
 
-  async findOneAdminForSign(
-    email: string,
-  ): Promise<DateAndBigIntToString<Admin> | null> {
+  async findOneAdminForSign(email: string): Promise<AdminEntity.Admin | null> {
     const admin = await this.prisma.admin.findFirst({
       where: { email },
     });
-
-    if (!admin) {
-      throw new BadRequestException('email is wrong');
-    }
 
     return dateAndBigIntToString(admin);
   }
@@ -50,10 +43,6 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
       where: options,
     });
 
-    if (!admin) {
-      throw new BadRequestException('Incorrect options');
-    }
-
     return dateAndBigIntToString(admin);
   }
 
@@ -64,10 +53,6 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
       select: typia.random<TypeToSelect<FindAdminInfoForCommonDto>>(),
       where: options,
     });
-
-    if (!admin) {
-      throw new BadRequestException('Incorrect options');
-    }
 
     return dateAndBigIntToString(admin);
   }

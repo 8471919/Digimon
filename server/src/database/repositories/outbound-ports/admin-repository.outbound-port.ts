@@ -1,11 +1,10 @@
-import { Admin } from '@prisma/client';
 import { AdminOptionsDto } from 'src/database/dtos/admin/admin-options.dto';
 import { AdminSignUpInputDto } from 'src/database/dtos/admin/admin.inbound-port.dto';
 import {
   FindAdminInfoForCommonDto,
   FindOneAdminExceptPasswordDto,
 } from 'src/database/dtos/admin/admin.outbound-port.dto';
-import { DateAndBigIntToString } from 'src/utils/types/date-to-string.type';
+import { AdminEntity } from 'src/database/models/admin/admin.entity';
 
 export const ADMIN_REPOSITORY_OUTBOUND_PORT =
   'ADMIN_REPOSITORY_OUTBOUND_PORT' as const;
@@ -15,9 +14,7 @@ export interface AdminRepositoryOutboundPort {
     adminInfo: AdminSignUpInputDto,
   ): Promise<FindOneAdminExceptPasswordDto | null>;
 
-  findOneAdminForSign(
-    email: string,
-  ): Promise<DateAndBigIntToString<Admin> | null>;
+  findOneAdminForSign(email: string): Promise<AdminEntity.Admin | null>;
 
   findOneAdminByOptions(
     options: AdminOptionsDto,
