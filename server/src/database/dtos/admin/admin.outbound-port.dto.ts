@@ -1,11 +1,9 @@
-import { Admin, MainPosting } from '@prisma/client';
-import { DateAndBigIntToString } from 'src/utils/types/date-to-string.type';
+import { AdminEntity } from 'src/database/models/admin/admin.entity';
+import { MainPostingEntity } from 'src/database/models/main-posting/main-posting.entity';
 
-export type FindOneAdminExceptPasswordDto = DateAndBigIntToString<
-  Omit<Admin, 'password'>
->;
+export type FindOneAdminExceptPasswordDto = Omit<AdminEntity.Admin, 'password'>;
 
 export interface FindAdminInfoForCommonDto
-  extends Pick<Admin, 'id' | 'nickname' | 'introduction'> {
-  mainPostings: DateAndBigIntToString<MainPosting>[];
+  extends Pick<AdminEntity.Admin, 'id' | 'nickname' | 'introduction'> {
+  mainPostings: MainPostingEntity.MainPosting[];
 }

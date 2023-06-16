@@ -1,8 +1,8 @@
-import { Admin } from '@prisma/client';
+import { AdminEntity } from 'src/database/models/admin/admin.entity';
 import { UserType } from 'src/database/values/user-type.value';
 
 export type AdminLogInDto = Pick<
-  Admin,
+  AdminEntity.Admin,
   'id' | 'email' | 'gradeId' | 'nickname'
 >;
 

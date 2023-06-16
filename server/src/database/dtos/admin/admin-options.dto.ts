@@ -1,5 +1,5 @@
-import { Admin } from '@prisma/client';
+import { AdminEntity } from 'src/database/models/admin/admin.entity';
 
 export type AdminOptionsDto = Partial<
-  Pick<Admin, 'id' | 'email' | 'nickname' | 'gradeId'>
+  Pick<AdminEntity.Admin, 'id' | 'email' | 'nickname' | 'gradeId'>
 >;

@@ -1,21 +1,16 @@
-import { Admin } from '@prisma/client';
-import { DateAndBigIntToString } from 'src/utils/types/date-to-string.type';
+import { AdminEntity } from 'src/database/models/admin/admin.entity';
 
-export type AdminSignUpInputDto = DateAndBigIntToString<
-  Omit<
-    Pick<
-      Admin,
-      | 'email'
-      | 'password'
-      | 'firstName'
-      | 'lastName'
-      | 'nickname'
-      | 'emailReception'
-      | 'genderId'
-      | 'gradeId'
-      | 'birth'
-    > &
-      Partial<Pick<Admin, 'middleName' | 'introduction'>>,
-    never
-  >
+export type AdminSignUpInputDto = Pick<
+  AdminEntity.Admin,
+  | 'email'
+  | 'password'
+  | 'firstName'
+  | 'lastName'
+  | 'nickname'
+  | 'emailReception'
+  | 'genderId'
+  | 'gradeId'
+  | 'birth'
+  | 'introduction'
+  | 'middleName'
 >;
