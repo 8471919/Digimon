@@ -24,4 +24,14 @@ export class AdminService {
 
     return admin;
   }
+
+  async getAdminInfoForCommon(options: AdminOptionsDto) {
+    const admin = await this.adminRepo.findOneAdminForCommon(options);
+
+    if (!admin) {
+      throw new BadRequestException('Option is incorrect');
+    }
+
+    return admin;
+  }
 }

@@ -5,6 +5,7 @@ import { JwtAdminGuard } from 'src/auth/guards/jwt-admin.guard';
 import { User } from 'src/common/decorators/user.decorator';
 import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
 import { FindOneAdminExceptPasswordDto } from 'src/database/dtos/admin/admin.outbound-port.dto';
+import typia from 'typia';
 
 @Controller('api/v1/admin')
 export class AdminController {
@@ -21,6 +22,13 @@ export class AdminController {
     }
 
     const admin = await this.adminService.getAdminInfo({ id });
+
+    return admin;
+  }
+
+  @TypedRoute.Get(':id/info')
+  async getAdminInfoForCommon(@TypedParam('id') id: number) {
+    const admin = await this.adminService.getAdminInfoForCommon({ id });
 
     return admin;
   }
