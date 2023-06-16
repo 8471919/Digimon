@@ -11,7 +11,7 @@ import { TypeToSelect } from 'src/utils/types/type-to-select.type';
 import { Admin } from '@prisma/client';
 import { AdminSignUpInputDto } from '../dtos/admin/admin.inbound-port.dto';
 import { DateAndBigIntToString } from 'src/utils/types/date-to-string.type';
-import { dateAndBigIntToString } from 'src/utils/functions/date-bigint-to-string.function';
+import { dateAndBigIntToString } from 'src/utils/functions/date-and-bigint-to-string.function';
 
 @Injectable()
 export class AdminRepository implements AdminRepositoryOutboundPort {
