@@ -3,12 +3,15 @@ import { Admin } from '@prisma/client';
 import { AuthController } from 'src/auth/auth.controller';
 import { AuthService } from 'src/auth/auth.service';
 import { AdminSignUpInputDto } from 'src/database/dtos/admin/admin.inbound-port.dto';
-import { FindOneAdminExceptPasswordDto } from 'src/database/dtos/admin/admin.outbound-port.dto';
+import {
+  FindAdminInfoForCommonDto,
+  FindOneAdminExceptPasswordDto,
+} from 'src/database/dtos/admin/admin.outbound-port.dto';
 import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
 import { AdminRepositoryOutboundPort } from 'src/database/repositories/outbound-ports/admin-repository.outbound-port';
 import { AdminController } from 'src/domain/admin/admin.controller';
 import { AdminService } from 'src/domain/admin/admin.service';
-import { DateKeyToString } from 'src/utils/types/date-to-string.type';
+import { DateAndBigIntToString } from 'src/utils/types/date-to-string.type';
 import typia from 'typia';
 
 /**
@@ -18,8 +21,9 @@ import typia from 'typia';
  */
 type MockAdminRepositoryParamType = {
   insertAdmin?: Array<FindOneAdminExceptPasswordDto>;
-  findOneAdminForSign?: Array<DateKeyToString<Admin> | null>;
+  findOneAdminForSign?: Array<DateAndBigIntToString<Admin> | null>;
   findOneAdminByOptions?: Array<FindOneAdminExceptPasswordDto | null>;
+  findOneAdminForCommon?: Array<FindAdminInfoForCommonDto | null>;
 };
 
 class MockAdminRepository implements AdminRepositoryOutboundPort {
@@ -41,7 +45,7 @@ class MockAdminRepository implements AdminRepositoryOutboundPort {
   }
   async findOneAdminForSign(
     email: string,
-  ): Promise<DateKeyToString<Admin> | null> {
+  ): Promise<DateAndBigIntToString<Admin> | null> {
     const res = this.result.findOneAdminForSign?.pop();
     if (!res && res !== null) {
       throw new Error('undefined');
@@ -49,10 +53,22 @@ class MockAdminRepository implements AdminRepositoryOutboundPort {
 
     return res;
   }
+
   async findOneAdminByOptions(
     options: Partial<Pick<Admin, 'id' | 'email' | 'nickname' | 'gradeId'>>,
   ): Promise<FindOneAdminExceptPasswordDto | null> {
     const res = this.result.findOneAdminByOptions?.pop();
+    if (!res && res !== null) {
+      throw new Error('undefined');
+    }
+
+    return res;
+  }
+
+  async findOneAdminForCommon(
+    options: Partial<Pick<Admin, 'id' | 'email' | 'nickname' | 'gradeId'>>,
+  ): Promise<FindAdminInfoForCommonDto | null> {
+    const res = this.result.findOneAdminForCommon?.pop();
     if (!res && res !== null) {
       throw new Error('undefined');
     }
@@ -90,10 +106,13 @@ describe('Admin Spec', () => {
         nickname: userInfo.nickname,
         gradeId: userInfo.gradeId,
       };
+
       const adminService = new AdminService(
         new MockAdminRepository({ findOneAdminByOptions: [userInfo] }),
       );
+
       const adminController = new AdminController(adminService);
+
       const res = await adminController.getAdminInfoForSelf(user, user.id);
 
       expect(res).toStrictEqual(userInfo);
@@ -111,7 +130,19 @@ describe('Admin Spec', () => {
   });
 
   describe('5. Read Admin for common user', () => {
-    it.todo('5-1. 일반 유저들을 위한 어드민 정보를 불러옵니다.');
+    it('5-1. 일반 유저들을 위한 어드민 정보를 불러옵니다.', async () => {
+      const admin = typia.random<FindAdminInfoForCommonDto>();
+
+      const adminService = new AdminService(
+        new MockAdminRepository({ findOneAdminForCommon: [{ ...admin }] }),
+      );
+
+      const adminController = new AdminController(adminService);
+
+      const res = await adminController.getAdminInfoForCommon(admin.id);
+
+      expect(res).toStrictEqual(admin);
+    });
   });
 
   describe('6. Admin Sign up', () => {
@@ -122,11 +153,8 @@ describe('Admin Spec', () => {
         gradeId: 1,
         nickname: 'king',
       };
-
       const body = typia.random<AdminSignUpInputDto>();
-
       const existedAdmin = null;
-
       const createdAdmin: FindOneAdminExceptPasswordDto = {
         ...body,
         id: 2,
@@ -137,7 +165,6 @@ describe('Admin Spec', () => {
         introduction: null,
         middleName: null,
       };
-
       const authService = new AuthService(
         new MockAdminRepository({
           findOneAdminForSign: [existedAdmin],
@@ -147,10 +174,8 @@ describe('Admin Spec', () => {
           secret: 'secret',
         }),
       );
-
       const authController = new AuthController(authService);
       const res = await authController.signUpByMaster(master, body);
-
       expect(res).toStrictEqual(createdAdmin);
     });
   });

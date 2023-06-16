@@ -1,7 +1,7 @@
 import { Admin } from '@prisma/client';
-import { DateKeyToString } from 'src/utils/types/date-to-string.type';
+import { DateAndBigIntToString } from 'src/utils/types/date-to-string.type';
 
-export type AdminSignUpInputDto = DateKeyToString<
+export type AdminSignUpInputDto = DateAndBigIntToString<
   Omit<
     Pick<
       Admin,

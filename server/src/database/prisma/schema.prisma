@@ -33,19 +33,19 @@ model Admin {
   Gender Gender @relation(fields: [genderId], references: [id])
   AdminGrade AdminGrade @relation(fields: [gradeId], references: [id])
 
-  MainPosting MainPosting[]
+  mainPostings MainPosting[] 
 }
 
 model Gender {
   id Int @id @default(autoincrement())  /// @type int
   name String @unique
-  Admin Admin[]
+  admins Admin[]
 }
 
 model AdminGrade {
   id Int @id @default(autoincrement())  /// @type int
   name String @unique
-  Admin Admin[]
+  admins Admin[]
 }
 
 model MainPosting {
@@ -63,7 +63,7 @@ model MainPosting {
   MainPostingCategory MainPostingCategory @relation(fields: [categoryId], references: [id])
   Admin Admin @relation(fields: [adminId], references: [id])
 
-  MainPostingReport MainPostingReport[]
+  mainPostingReports MainPostingReport[]
 }
 
 model MainPostingCategory {
@@ -73,7 +73,7 @@ model MainPostingCategory {
 
   parentId Int? /// @type int
 
-  MainPosting MainPosting[]
+  mainPostings MainPosting[]
 }
 
 model MainPostingReport {
