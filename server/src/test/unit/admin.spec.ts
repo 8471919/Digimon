@@ -1,5 +1,4 @@
 import { JwtService } from '@nestjs/jwt';
-import { Admin } from '@prisma/client';
 import { AuthController } from 'src/auth/auth.controller';
 import { AuthService } from 'src/auth/auth.service';
 import { AdminSignUpInputDto } from 'src/database/dtos/admin/admin.inbound-port.dto';
@@ -8,74 +7,10 @@ import {
   FindOneAdminExceptPasswordDto,
 } from 'src/database/dtos/admin/admin.outbound-port.dto';
 import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
-import { AdminRepositoryOutboundPort } from 'src/database/repositories/outbound-ports/admin-repository.outbound-port';
 import { AdminController } from 'src/domain/admin/admin.controller';
 import { AdminService } from 'src/domain/admin/admin.service';
-import { DateAndBigIntToString } from 'src/utils/types/date-to-string.type';
 import typia from 'typia';
-
-/**
- * 동일한 repository 함수를 두 번 호출할 경우, 결과 값을 1개만 쓸수 밖에 없다는 단점이 있다.
- * 그래서 차라리 Array형식으로 만들어서 함수 호출할 때 마다, pop을 하는 형식으로 하도록 만들었다.
- * 어차피, pop으로 변수에 한 번 할당하면, 해당 변수를 이용해서 동일한 값을 재사용 할 수 있으니까.
- */
-type MockAdminRepositoryParamType = {
-  insertAdmin?: Array<FindOneAdminExceptPasswordDto>;
-  findOneAdminForSign?: Array<DateAndBigIntToString<Admin> | null>;
-  findOneAdminByOptions?: Array<FindOneAdminExceptPasswordDto | null>;
-  findOneAdminForCommon?: Array<FindAdminInfoForCommonDto | null>;
-};
-
-class MockAdminRepository implements AdminRepositoryOutboundPort {
-  private readonly result: MockAdminRepositoryParamType;
-
-  constructor(result: MockAdminRepositoryParamType) {
-    this.result = result;
-  }
-
-  async insertAdmin(
-    adminInfo: AdminSignUpInputDto,
-  ): Promise<FindOneAdminExceptPasswordDto | null> {
-    const res = this.result.insertAdmin?.pop();
-    if (!res && res !== null) {
-      throw new Error('undefined');
-    }
-
-    return res;
-  }
-  async findOneAdminForSign(
-    email: string,
-  ): Promise<DateAndBigIntToString<Admin> | null> {
-    const res = this.result.findOneAdminForSign?.pop();
-    if (!res && res !== null) {
-      throw new Error('undefined');
-    }
-
-    return res;
-  }
-
-  async findOneAdminByOptions(
-    options: Partial<Pick<Admin, 'id' | 'email' | 'nickname' | 'gradeId'>>,
-  ): Promise<FindOneAdminExceptPasswordDto | null> {
-    const res = this.result.findOneAdminByOptions?.pop();
-    if (!res && res !== null) {
-      throw new Error('undefined');
-    }
-
-    return res;
-  }
-
-  async findOneAdminForCommon(
-    options: Partial<Pick<Admin, 'id' | 'email' | 'nickname' | 'gradeId'>>,
-  ): Promise<FindAdminInfoForCommonDto | null> {
-    const res = this.result.findOneAdminForCommon?.pop();
-    if (!res && res !== null) {
-      throw new Error('undefined');
-    }
-
-    return res;
-  }
-}
+import { MockAdminRepository } from './mock/admin.repository.mock';
 
 describe('Admin Spec', () => {
   describe('1. Validate Admin', () => {
