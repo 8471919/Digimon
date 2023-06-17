@@ -8,6 +8,7 @@ import { AdminRepositoryOutboundPort } from './outbound-ports/admin-repository.o
 import { AdminOptionsDto } from '../dtos/admin/admin-options.dto';
 import {
   FindAdminInfoForCommonDto,
+  FindAdminForListForCommonDto,
   FindOneAdminExceptPasswordDto,
 } from '../dtos/admin/admin.outbound-port.dto';
 import typia from 'typia';
@@ -64,9 +65,24 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
     const admin = await this.prisma.admin.findFirst({
       select: typia.random<TypeToSelect<SelectFindAdminInfoForCommonDto>>(),
       where: options,
+      orderBy: {
+        gradeId: 'asc',
+      },
     });
 
     return dateAndBigIntToString(admin);
+  }
+
+  async findAdminList(
+    options: Partial<
+      Pick<AdminEntity.Admin, 'email' | 'nickname' | 'gradeId' | 'id'>
+    >,
+  ): Promise<FindAdminForListForCommonDto[] | null> {
+    const admins = await this.prisma.admin.findMany({
+      select: typia.random<TypeToSelect<FindAdminForListForCommonDto>>(),
+    });
+
+    return dateAndBigIntToString(admins);
   }
 
   async updateAdmin(

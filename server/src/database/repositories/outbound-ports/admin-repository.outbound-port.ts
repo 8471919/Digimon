@@ -4,6 +4,7 @@ import {
   UpdateAdminInputDto,
 } from 'src/database/dtos/admin/admin.inbound-port.dto';
 import {
+  FindAdminForListForCommonDto,
   FindAdminInfoForCommonDto,
   FindOneAdminExceptPasswordDto,
 } from 'src/database/dtos/admin/admin.outbound-port.dto';
@@ -31,4 +32,8 @@ export interface AdminRepositoryOutboundPort {
     id: number,
     data: UpdateAdminInputDto,
   ): Promise<FindOneAdminExceptPasswordDto | null>;
+
+  findAdminList(
+    options: AdminOptionsDto,
+  ): Promise<FindAdminForListForCommonDto[] | null>;
 }
