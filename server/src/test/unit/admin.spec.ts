@@ -1,7 +1,10 @@
 import { JwtService } from '@nestjs/jwt';
 import { AuthController } from 'src/auth/auth.controller';
 import { AuthService } from 'src/auth/auth.service';
-import { AdminSignUpInputDto } from 'src/database/dtos/admin/admin.inbound-port.dto';
+import {
+  AdminSignUpInputDto,
+  UpdateAdminInfoInputDto,
+} from 'src/database/dtos/admin/admin.inbound-port.dto';
 import {
   FindAdminInfoForCommonDto,
   FindOneAdminExceptPasswordDto,
@@ -11,6 +14,7 @@ import { AdminController } from 'src/domain/admin/admin.controller';
 import { AdminService } from 'src/domain/admin/admin.service';
 import typia from 'typia';
 import { MockAdminRepository } from './mock/admin.repository.mock';
+import { OmitAmongObject } from 'src/utils/types/omit-among-object.type';
 
 describe('Admin Spec', () => {
   describe('1. Validate Admin', () => {
@@ -123,7 +127,25 @@ describe('Admin Spec', () => {
       expect(res).toStrictEqual({ ...admin, email });
     });
 
-    it.todo('3-3. 기타 정보를 변경합니다.');
+    it('3-3. 기타 정보를 변경합니다.', async () => {
+      const admin = typia.random<FindOneAdminExceptPasswordDto>();
+
+      const body = typia.random<UpdateAdminInfoInputDto>();
+
+      const adminService = new AdminService(
+        new MockAdminRepository({
+          updateAdmin: [{ ...admin, ...body }],
+        }),
+      );
+
+      const adminController = new AdminController(adminService);
+
+      const res = await adminController.modifyAdminInfo(admin.id, body, {
+        ...admin,
+      });
+
+      expect(res).toStrictEqual({ ...admin, ...body });
+    });
   });
 
   describe('4. Read Admin List', () => {
@@ -175,6 +197,7 @@ describe('Admin Spec', () => {
           secret: 'secret',
         }),
       );
+
       const authController = new AuthController(authService);
       const res = await authController.signUpByMaster(master, body);
       expect(res).toStrictEqual(createdAdmin);
