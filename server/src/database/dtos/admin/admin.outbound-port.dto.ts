@@ -4,6 +4,14 @@ import { MainPostingEntity } from 'src/database/models/main-posting/main-posting
 export type FindOneAdminExceptPasswordDto = Omit<AdminEntity.Admin, 'password'>;
 
 export interface FindAdminInfoForCommonDto
-  extends Pick<AdminEntity.Admin, 'id' | 'nickname' | 'introduction'> {
+  extends Pick<
+    AdminEntity.Admin,
+    'id' | 'nickname' | 'introduction' | 'gradeId'
+  > {
   mainPostings: MainPostingEntity.MainPosting[];
 }
+
+export type FindAdminForListForCommonDto = Omit<
+  FindAdminInfoForCommonDto,
+  'mainPostings'
+>;

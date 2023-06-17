@@ -5,6 +5,7 @@ import { JwtAdminGuard } from 'src/auth/guards/jwt-admin.guard';
 import { User } from 'src/common/decorators/user.decorator';
 import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
 import {
+  FindAdminForListForCommonDto,
   FindAdminInfoForCommonDto,
   FindOneAdminExceptPasswordDto,
 } from 'src/database/dtos/admin/admin.outbound-port.dto';
@@ -14,7 +15,6 @@ import {
   UpdateAdminNicknameInputDto,
   UpdateAdminPasswordInputDto,
 } from 'src/database/dtos/admin/admin.inbound-port.dto';
-import { AdminEntity } from 'src/database/models/admin/admin.entity';
 
 @Controller('api/v1/admin')
 export class AdminController {
@@ -42,6 +42,13 @@ export class AdminController {
     const admin = await this.adminService.getAdminInfoForCommon({ id });
 
     return admin;
+  }
+
+  @TypedRoute.Get('list')
+  async getAdminList(): Promise<FindAdminForListForCommonDto[]> {
+    const admins = await this.adminService.getAdminList({});
+
+    return admins;
   }
 
   @UseGuards(JwtAdminGuard)

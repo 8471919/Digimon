@@ -4,6 +4,7 @@ import {
   UpdateAdminInputDto,
 } from 'src/database/dtos/admin/admin.inbound-port.dto';
 import {
+  FindAdminForListForCommonDto,
   FindAdminInfoForCommonDto,
   FindOneAdminExceptPasswordDto,
 } from 'src/database/dtos/admin/admin.outbound-port.dto';
@@ -66,6 +67,17 @@ export class MockAdminRepository implements AdminRepositoryOutboundPort {
     options: AdminOptionsDto,
   ): Promise<FindAdminInfoForCommonDto | null> {
     const res = this.result.findOneAdminForCommon?.pop();
+    if (res === undefined) {
+      throw new Error('undefined');
+    }
+
+    return res;
+  }
+
+  async findAdminList(
+    options: AdminOptionsDto,
+  ): Promise<FindAdminForListForCommonDto[] | null> {
+    const res = this.result.findAdminList?.pop();
     if (res === undefined) {
       throw new Error('undefined');
     }
