@@ -9,6 +9,7 @@ import {
   FindOneAdminExceptPasswordDto,
 } from 'src/database/dtos/admin/admin.outbound-port.dto';
 import {
+  UpdateAdminEmailInputDto,
   UpdateAdminNicknameInputDto,
   UpdateAdminPasswordInputDto,
 } from 'src/database/dtos/admin/admin.inbound-port.dto';
@@ -73,6 +74,24 @@ export class AdminController {
 
     const admin = await this.adminService.modifyAdminInfo(user.id, {
       nickname: body.nickname,
+    });
+
+    return admin;
+  }
+
+  @UseGuards(JwtAdminGuard)
+  @TypedRoute.Put(':id/email')
+  async modifyEmail(
+    @TypedParam('id') id: number,
+    @TypedBody() body: UpdateAdminEmailInputDto,
+    @User() user: AdminLogInDto,
+  ): Promise<FindOneAdminExceptPasswordDto> {
+    if (id !== user.id) {
+      throw new UnauthorizedException('UnAuthorized');
+    }
+
+    const admin = await this.adminService.modifyAdminInfo(user.id, {
+      email: body.email,
     });
 
     return admin;
