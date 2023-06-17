@@ -100,6 +100,7 @@ describe('Admin Spec', () => {
 
       expect(res).toStrictEqual({ ...admin });
     });
+    it.todo('3-4. 이메일을 변경합니다.');
     it.todo('3-3. 기타 정보를 변경합니다.');
   });
 
