@@ -10,6 +10,7 @@ import {
   AdminRepositoryOutboundPort,
 } from 'src/database/repositories/outbound-ports/admin-repository.outbound-port';
 import * as bcrypt from 'bcrypt';
+import { BCRYPT_SALT } from 'src/database/values/bcrypt-salt.value';
 
 @Injectable()
 export class AdminService {
