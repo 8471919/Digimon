@@ -1,4 +1,6 @@
 import { AdminEntity } from 'src/database/models/admin/admin.entity';
+import { CommonDateEntity } from 'src/database/models/common/common-date.entity';
+import { OmitAmongObject } from 'src/utils/types/omit-among-object.type';
 
 export type AdminSignUpInputDto = Pick<
   AdminEntity.Admin,
@@ -13,4 +15,10 @@ export type AdminSignUpInputDto = Pick<
   | 'birth'
   | 'introduction'
   | 'middleName'
+>;
+
+export type UpdateAdminPasswordInputDto = Pick<AdminEntity.Admin, 'password'>;
+
+export type UpdateAdminInputDto = Partial<
+  OmitAmongObject<AdminEntity.Admin, CommonDateEntity>
 >;
