@@ -2,6 +2,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { AdminOptionsDto } from 'src/database/dtos/admin/admin-options.dto';
 import { UpdateAdminInputDto } from 'src/database/dtos/admin/admin.inbound-port.dto';
 import {
+  FindAdminForListForCommonDto,
   FindAdminInfoForCommonDto,
   FindOneAdminExceptPasswordDto,
 } from 'src/database/dtos/admin/admin.outbound-port.dto';
@@ -41,6 +42,18 @@ export class AdminService {
     }
 
     return admin;
+  }
+
+  async getAdminList(
+    options: AdminOptionsDto,
+  ): Promise<FindAdminForListForCommonDto[]> {
+    const admins = await this.adminRepo.findAdminList(options);
+
+    if (!admins) {
+      throw new BadRequestException('Option is incorrect');
+    }
+
+    return admins;
   }
 
   async modifyAdminInfo(
