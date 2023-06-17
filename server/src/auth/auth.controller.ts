@@ -13,7 +13,6 @@ import { AdminSignUpInputDto } from 'src/database/dtos/admin/admin.inbound-port.
 import { FindOneAdminExceptPasswordDto } from 'src/database/dtos/admin/admin.outbound-port.dto';
 import { ADMIN_GRADE } from 'src/database/values/admin-grade.value';
 import { JwtMasterAdminGuard } from './guards/jwt-master-admin.guard';
-import { JwtAdminGuard } from './guards/jwt-admin.guard';
 
 @Controller('api/v1/auth')
 export class AuthController {
@@ -21,7 +20,9 @@ export class AuthController {
 
   @UseGuards(AdminGuard)
   @TypedRoute.Post('admin-login')
-  async adminSignIn(@User() user: AdminLogInDto) {
+  async adminSignIn(@User() user: AdminLogInDto): Promise<{
+    accessToken: string;
+  }> {
     const token = await this.authService.adminSignIn(user);
 
     return token;

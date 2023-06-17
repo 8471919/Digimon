@@ -4,7 +4,10 @@ import { TypedBody, TypedParam, TypedRoute } from '@nestia/core';
 import { JwtAdminGuard } from 'src/auth/guards/jwt-admin.guard';
 import { User } from 'src/common/decorators/user.decorator';
 import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
-import { FindOneAdminExceptPasswordDto } from 'src/database/dtos/admin/admin.outbound-port.dto';
+import {
+  FindAdminInfoForCommonDto,
+  FindOneAdminExceptPasswordDto,
+} from 'src/database/dtos/admin/admin.outbound-port.dto';
 import { UpdateAdminPasswordInputDto } from 'src/database/dtos/admin/admin.inbound-port.dto';
 
 @Controller('api/v1/admin')
@@ -27,7 +30,9 @@ export class AdminController {
   }
 
   @TypedRoute.Get(':id/info')
-  async getAdminInfoForCommon(@TypedParam('id') id: number) {
+  async getAdminInfoForCommon(
+    @TypedParam('id') id: number,
+  ): Promise<FindAdminInfoForCommonDto> {
     const admin = await this.adminService.getAdminInfoForCommon({ id });
 
     return admin;
