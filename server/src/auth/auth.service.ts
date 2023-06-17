@@ -63,7 +63,7 @@ export class AuthService {
       throw new BadRequestException('Admin already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(adminInfo.password, 10);
+    const hashedPassword = await bcrypt.hash(adminInfo.password, BCRYPT_SALT);
 
     adminInfo.password = hashedPassword;
 

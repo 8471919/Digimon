@@ -6,6 +6,7 @@ import {
   ADMIN_REPOSITORY_OUTBOUND_PORT,
   AdminRepositoryOutboundPort,
 } from 'src/database/repositories/outbound-ports/admin-repository.outbound-port';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AdminService {
@@ -40,6 +41,10 @@ export class AdminService {
     id: number,
     data: UpdateAdminInputDto,
   ): Promise<FindOneAdminExceptPasswordDto> {
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, BCRYPT_SALT);
+    }
+
     const admin = await this.adminRepo.updateAdmin(id, data);
 
     if (!admin) {
