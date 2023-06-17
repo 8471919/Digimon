@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { AdminRepositoryOutboundPort } from './outbound-ports/admin-repository.outbound-port';
 import { AdminOptionsDto } from '../dtos/admin/admin-options.dto';
@@ -18,6 +22,7 @@ import {
   SelectFindAdminInfoForCommonDto,
   SelectFindOneAdminExceptPasswordDto,
 } from '../dtos/select/admin-select.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AdminRepository implements AdminRepositoryOutboundPort {
@@ -68,6 +73,44 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
     id: number,
     data: UpdateAdminInputDto,
   ): Promise<FindOneAdminExceptPasswordDto | null> {
+    if (data.email) {
+      const temp = await this.prisma.admin.findUnique({
+        where: { email: data.email },
+        select: { email: true },
+      });
+
+      if (temp) {
+        throw new BadRequestException('existed email');
+      }
+    }
+
+    if (data.password) {
+      const temp = await this.prisma.admin.findUnique({
+        where: { id },
+        select: { password: true },
+      });
+
+      if (!temp) {
+        throw new UnauthorizedException('UnAuthorized');
+      }
+
+      const isSame = await bcrypt.compare(temp.password, data.password);
+
+      if (isSame) {
+        throw new BadRequestException('Same password as before');
+      }
+    }
+
+    if (data.nickname) {
+      const temp = await this.prisma.admin.findUnique({
+        where: { nickname: data.nickname },
+        select: { nickname: true },
+      });
+      if (temp) {
+        throw new BadRequestException(`${data.nickname} exist`);
+      }
+    }
+
     const admin = await this.prisma.admin.update({
       data: data,
       where: { id },
