@@ -55,7 +55,30 @@ describe('Admin Spec', () => {
   });
 
   describe('3. Update Admin', () => {
-    it.todo('3-1. 닉네임을 변경합니다.');
+    it('3-1. 닉네임을 변경합니다.', async () => {
+      const admin = typia.random<FindOneAdminExceptPasswordDto>();
+
+      const nickname = 'testNickname';
+
+      const adminService = new AdminService(
+        new MockAdminRepository({
+          updateAdmin: [{ ...admin, nickname }],
+        }),
+      );
+
+      const adminController = new AdminController(adminService);
+
+      const res = await adminController.modifyNickname(
+        admin.id,
+        {
+          nickname,
+        },
+        { ...admin },
+      );
+
+      expect(res).toStrictEqual({ ...admin, nickname });
+    });
+
     it('3-2. 비밀번호를 변경합니다.', async () => {
       const admin = typia.random<FindOneAdminExceptPasswordDto>();
 
