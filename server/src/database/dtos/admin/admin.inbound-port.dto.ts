@@ -23,6 +23,11 @@ export type UpdateAdminNicknameInputDto = Pick<AdminEntity.Admin, 'nickname'>;
 
 export type UpdateAdminEmailInputDto = Pick<AdminEntity.Admin, 'email'>;
 
+export type UpdateAdminInfoInputDto = Omit<
+  UpdateAdminInputDto,
+  'password' | 'email' | 'nickname'
+>;
+
 export type UpdateAdminInputDto = Partial<
   Omit<OmitAmongObject<AdminEntity.Admin, CommonDateEntity>, 'id' | 'gradeId'>
 >;
