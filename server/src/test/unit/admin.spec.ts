@@ -6,6 +6,7 @@ import {
   UpdateAdminInfoInputDto,
 } from 'src/database/dtos/admin/admin.inbound-port.dto';
 import {
+  FindAdminForListForCommonDto,
   FindAdminInfoForCommonDto,
   FindOneAdminExceptPasswordDto,
 } from 'src/database/dtos/admin/admin.outbound-port.dto';
@@ -149,7 +150,23 @@ describe('Admin Spec', () => {
   });
 
   describe('4. Read Admin List', () => {
-    it.todo('4-1. 어드민 목록을 불러옵니다.');
+    it('4-1. 어드민 목록을 불러옵니다.', async () => {
+      const createAdmin = typia.createRandom<FindAdminForListForCommonDto>();
+
+      const admins = [createAdmin(), createAdmin(), createAdmin()];
+
+      const adminService = new AdminService(
+        new MockAdminRepository({
+          findAdminList: [admins],
+        }),
+      );
+
+      const adminController = new AdminController(adminService);
+
+      const res = await adminController.getAdminList();
+
+      expect(res).toStrictEqual(admins);
+    });
   });
 
   describe('5. Read Admin for common user', () => {
