@@ -100,7 +100,29 @@ describe('Admin Spec', () => {
 
       expect(res).toStrictEqual({ ...admin });
     });
-    it.todo('3-4. 이메일을 변경합니다.');
+
+    it('3-4. 이메일을 변경합니다.', async () => {
+      const admin = typia.random<FindOneAdminExceptPasswordDto>();
+
+      const email = 'test@gmail.com';
+
+      const adminService = new AdminService(
+        new MockAdminRepository({
+          updateAdmin: [{ ...admin, email }],
+        }),
+      );
+
+      const adminController = new AdminController(adminService);
+
+      const res = await adminController.modifyEmail(
+        admin.id,
+        { email },
+        { ...admin },
+      );
+
+      expect(res).toStrictEqual({ ...admin, email });
+    });
+
     it.todo('3-3. 기타 정보를 변경합니다.');
   });
 
