@@ -10,6 +10,7 @@ import {
 } from 'src/database/dtos/admin/admin.outbound-port.dto';
 import {
   UpdateAdminEmailInputDto,
+  UpdateAdminInfoInputDto,
   UpdateAdminNicknameInputDto,
   UpdateAdminPasswordInputDto,
 } from 'src/database/dtos/admin/admin.inbound-port.dto';
@@ -93,6 +94,22 @@ export class AdminController {
     const admin = await this.adminService.modifyAdminInfo(user.id, {
       email: body.email,
     });
+
+    return admin;
+  }
+
+  @UseGuards(JwtAdminGuard)
+  @TypedRoute.Put(':id')
+  async modifyAdminInfo(
+    @TypedParam('id') id: number,
+    @TypedBody() body: UpdateAdminInfoInputDto,
+    @User() user: AdminLogInDto,
+  ): Promise<FindOneAdminExceptPasswordDto> {
+    if (id !== user.id) {
+      throw new UnauthorizedException('UnAuthorized');
+    }
+
+    const admin = await this.adminService.modifyAdminInfo(user.id, body);
 
     return admin;
   }
