@@ -43,7 +43,7 @@ export class AdminController {
   }
 
   @UseGuards(JwtAdminGuard)
-  @TypedRoute.Put(':id')
+  @TypedRoute.Put(':id/password')
   async modifyPassword(
     @TypedParam('id') id: number,
     @TypedBody() body: UpdateAdminPasswordInputDto,
@@ -61,7 +61,7 @@ export class AdminController {
   }
 
   @UseGuards(JwtAdminGuard)
-  @TypedRoute.Put(':id')
+  @TypedRoute.Put(':id/nickname')
   async modifyNickname(
     @TypedParam('id') id: number,
     @TypedBody() body: UpdateAdminNicknameInputDto,
