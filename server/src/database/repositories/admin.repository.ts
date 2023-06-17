@@ -14,6 +14,10 @@ import {
 } from '../dtos/admin/admin.inbound-port.dto';
 import { dateAndBigIntToString } from 'src/utils/functions/date-and-bigint-to-string.function';
 import { AdminEntity } from '../models/admin/admin.entity';
+import {
+  SelectFindAdminInfoForCommonDto,
+  SelectFindOneAdminExceptPasswordDto,
+} from '../dtos/select/admin-select.dto';
 
 @Injectable()
 export class AdminRepository implements AdminRepositoryOutboundPort {
@@ -24,7 +28,7 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
   ): Promise<FindOneAdminExceptPasswordDto | null> {
     const admin = await this.prisma.admin.create({
       data: adminInfo,
-      select: typia.random<TypeToSelect<FindOneAdminExceptPasswordDto>>(),
+      select: typia.random<TypeToSelect<SelectFindOneAdminExceptPasswordDto>>(),
     });
 
     return dateAndBigIntToString(admin);
@@ -42,7 +46,7 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
     options: AdminOptionsDto,
   ): Promise<FindOneAdminExceptPasswordDto | null> {
     const admin = await this.prisma.admin.findFirst({
-      select: typia.random<TypeToSelect<FindOneAdminExceptPasswordDto>>(),
+      select: typia.random<TypeToSelect<SelectFindOneAdminExceptPasswordDto>>(),
       where: options,
     });
 
@@ -53,7 +57,7 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
     options: AdminOptionsDto,
   ): Promise<FindAdminInfoForCommonDto | null> {
     const admin = await this.prisma.admin.findFirst({
-      select: typia.random<TypeToSelect<FindAdminInfoForCommonDto>>(),
+      select: typia.random<TypeToSelect<SelectFindAdminInfoForCommonDto>>(),
       where: options,
     });
 
@@ -67,7 +71,7 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
     const admin = await this.prisma.admin.update({
       data: data,
       where: { id },
-      select: typia.random<TypeToSelect<FindOneAdminExceptPasswordDto>>(),
+      select: typia.random<TypeToSelect<SelectFindOneAdminExceptPasswordDto>>(),
     });
 
     return dateAndBigIntToString(admin);

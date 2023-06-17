@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AdminSignUpInputDto } from 'src/database/dtos/admin/admin.inbound-port.dto';
 import { FindOneAdminExceptPasswordDto } from 'src/database/dtos/admin/admin.outbound-port.dto';
 import * as bcrypt from 'bcrypt';
+import { BCRYPT_SALT } from 'src/database/values/bcrypt-salt.value';
 
 @Injectable()
 export class AuthService {

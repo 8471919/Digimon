@@ -1,12 +1,16 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { AdminOptionsDto } from 'src/database/dtos/admin/admin-options.dto';
 import { UpdateAdminInputDto } from 'src/database/dtos/admin/admin.inbound-port.dto';
-import { FindOneAdminExceptPasswordDto } from 'src/database/dtos/admin/admin.outbound-port.dto';
+import {
+  FindAdminInfoForCommonDto,
+  FindOneAdminExceptPasswordDto,
+} from 'src/database/dtos/admin/admin.outbound-port.dto';
 import {
   ADMIN_REPOSITORY_OUTBOUND_PORT,
   AdminRepositoryOutboundPort,
 } from 'src/database/repositories/outbound-ports/admin-repository.outbound-port';
 import * as bcrypt from 'bcrypt';
+import { BCRYPT_SALT } from 'src/database/values/bcrypt-salt.value';
 
 @Injectable()
 export class AdminService {
@@ -27,7 +31,9 @@ export class AdminService {
     return admin;
   }
 
-  async getAdminInfoForCommon(options: AdminOptionsDto) {
+  async getAdminInfoForCommon(
+    options: AdminOptionsDto,
+  ): Promise<FindAdminInfoForCommonDto> {
     const admin = await this.adminRepo.findOneAdminForCommon(options);
 
     if (!admin) {
