@@ -8,7 +8,11 @@ import {
   FindAdminInfoForCommonDto,
   FindOneAdminExceptPasswordDto,
 } from 'src/database/dtos/admin/admin.outbound-port.dto';
-import { UpdateAdminPasswordInputDto } from 'src/database/dtos/admin/admin.inbound-port.dto';
+import {
+  UpdateAdminNicknameInputDto,
+  UpdateAdminPasswordInputDto,
+} from 'src/database/dtos/admin/admin.inbound-port.dto';
+import { AdminEntity } from 'src/database/models/admin/admin.entity';
 
 @Controller('api/v1/admin')
 export class AdminController {
@@ -39,7 +43,7 @@ export class AdminController {
   }
 
   @UseGuards(JwtAdminGuard)
-  @TypedRoute.Put(':id')
+  @TypedRoute.Put(':id/password')
   async modifyPassword(
     @TypedParam('id') id: number,
     @TypedBody() body: UpdateAdminPasswordInputDto,
@@ -51,6 +55,24 @@ export class AdminController {
 
     const admin = await this.adminService.modifyAdminInfo(user.id, {
       password: body.password,
+    });
+
+    return admin;
+  }
+
+  @UseGuards(JwtAdminGuard)
+  @TypedRoute.Put(':id/nickname')
+  async modifyNickname(
+    @TypedParam('id') id: number,
+    @TypedBody() body: UpdateAdminNicknameInputDto,
+    @User() user: AdminLogInDto,
+  ): Promise<FindOneAdminExceptPasswordDto> {
+    if (id !== user.id) {
+      throw new UnauthorizedException('UnAuthorized');
+    }
+
+    const admin = await this.adminService.modifyAdminInfo(user.id, {
+      nickname: body.nickname,
     });
 
     return admin;
