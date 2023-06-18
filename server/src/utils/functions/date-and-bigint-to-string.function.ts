@@ -13,6 +13,10 @@ export function dateAndBigIntToString<T extends object>(
         return { ...acc, [key]: null };
       }
 
+      if (value instanceof Array) {
+        return { ...acc, [key]: value };
+      }
+
       if (value instanceof Date) {
         return { ...acc, [key]: value.toISOString() };
       }
