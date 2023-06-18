@@ -34,16 +34,3 @@ export function dateAndBigIntToString<T extends object>(
     throw new Error('dateAndBigIntToString function is wrong');
   }
 }
-
-const a = {
-  a: new Date(),
-  b: null,
-  c: {
-    d: null,
-    e: new Date(),
-    f: BigInt(1),
-  },
-  g: BigInt(2),
-};
-
-console.log(dateAndBigIntToString(a));
