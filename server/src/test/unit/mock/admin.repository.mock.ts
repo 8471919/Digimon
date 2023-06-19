@@ -9,9 +9,7 @@ import {
   FindOneAdminExceptPasswordDto,
 } from 'src/database/dtos/admin/admin.outbound-port.dto';
 import { AdminEntity } from 'src/database/models/admin/admin.entity';
-import { CommonDateEntity } from 'src/database/models/common/common-date.entity';
 import { AdminRepositoryOutboundPort } from 'src/database/repositories/outbound-ports/admin-repository.outbound-port';
-import { OmitAmongObject } from 'src/utils/types/omit-among-object.type';
 
 /**
  * 동일한 repository 함수를 두 번 호출할 경우, 결과 값을 1개만 쓸수 밖에 없다는 단점이 있다.
@@ -76,7 +74,7 @@ export class MockAdminRepository implements AdminRepositoryOutboundPort {
 
   async findAdminList(
     options: AdminOptionsDto,
-  ): Promise<FindAdminForListForCommonDto[] | null> {
+  ): Promise<FindAdminForListForCommonDto | null> {
     const res = this.result.findAdminList?.pop();
     if (res === undefined) {
       throw new Error('undefined');
