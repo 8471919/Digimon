@@ -5,7 +5,7 @@ const NESTIA_CONFIG: sdk.INestiaConfig = {
   /**
    * List of files or directories containing the NestJS controller classes.
    */
-  input: 'src/domain/**/*.controller.ts',
+  input: 'src/**/*.controller.ts',
   /**
    * Output directory that SDK would be placed in.
    *
@@ -39,7 +39,13 @@ const NESTIA_CONFIG: sdk.INestiaConfig = {
     /**
      * Security schemes.
      */
-    security: {},
+    security: {
+      bearer: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'Authorization',
+      },
+    },
   },
   /**
    * Whether to wrap DTO by primitive type.
