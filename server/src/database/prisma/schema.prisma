@@ -19,7 +19,7 @@ model Admin {
   lastName String
   nickname String @unique
   introduction String? @db.Text
-  birth DateTime @db.Date /// @format date
+  birth DateTime @db.Date /// @format date-time
   
   emailReception Boolean
 
