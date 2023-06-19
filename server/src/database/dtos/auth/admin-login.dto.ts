@@ -19,3 +19,5 @@ export interface AdminJwtDto extends AdminLogInDto {
    */
   exp: number;
 }
+
+export type AdminLogInInputDto = Pick<AdminEntity.Admin, 'email' | 'password'>;

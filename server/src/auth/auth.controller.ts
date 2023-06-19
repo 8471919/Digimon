@@ -8,7 +8,10 @@ import { AuthService } from './auth.service';
 import { TypedBody, TypedRoute } from '@nestia/core';
 import { AdminGuard } from './guards/admin.guard';
 import { User } from 'src/common/decorators/user.decorator';
-import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
+import {
+  AdminLogInDto,
+  AdminLogInInputDto,
+} from 'src/database/dtos/auth/admin-login.dto';
 import { AdminSignUpInputDto } from 'src/database/dtos/admin/admin.inbound-port.dto';
 import { FindOneAdminExceptPasswordDto } from 'src/database/dtos/admin/admin.outbound-port.dto';
 import { ADMIN_GRADE } from 'src/database/values/admin-grade.value';
@@ -20,7 +23,10 @@ export class AuthController {
 
   @UseGuards(AdminGuard)
   @TypedRoute.Post('admin-login')
-  async adminSignIn(@User() user: AdminLogInDto): Promise<{
+  async adminSignIn(
+    @User() user: AdminLogInDto,
+    @TypedBody() body: AdminLogInInputDto,
+  ): Promise<{
     accessToken: string;
   }> {
     const token = await this.authService.adminSignIn(user);
