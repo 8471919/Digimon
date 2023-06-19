@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id Int @id @default(autoincrement())  /// @type int
+  email String @unique /// @format email
+  password String
+  firstName String
+  middleName String?
+  lastName String
+  nickname String @unique
+  introduction String? @db.Text
+  birth DateTime @db.Date /// @format date-time
+  
+  emailReception Boolean
+
+  createdAt DateTime? @default(now()) /// @format date-time
+  updatedAt DateTime? @updatedAt  /// @format date-time
+  deletedAt DateTime? /// @format date-time
+
+  genderId Int /// @type int
+  gradeId Int /// @type int
+
+  Gender Gender @relation(fields: [genderId], references: [id])
+  AdminGrade AdminGrade @relation(fields: [gradeId], references: [id])
+
+  mainPostings MainPosting[] 
+}
+
+model Gender {
+  id Int @id @default(autoincrement())  /// @type int
+  name String @unique
+  admins Admin[]
+}
+
+model AdminGrade {
+  id Int @id @default(autoincrement())  /// @type int
+  name String @unique
+  admins Admin[]
+}
+
+model MainPosting {
+  id BigInt @id @default(autoincrement()) /// @type int
+  title String
+  content String @db.Text
+  
+  createdAt DateTime? @default(now()) /// @format date-time
+  updatedAt DateTime? @updatedAt  /// @format date-time
+  deletedAt DateTime? /// @format date-time
+
+  categoryId Int  /// @type int
+  adminId Int /// @type int
+
+  MainPostingCategory MainPostingCategory @relation(fields: [categoryId], references: [id])
+  Admin Admin @relation(fields: [adminId], references: [id])
+
+  mainPostingReports MainPostingReport[]
+}
+
+model MainPostingCategory {
+  id Int @id @default(autoincrement())  /// @type int
+  name String @unique
+  orderId Int?  /// @type int // 해당 카테고리의 분류번호를 나타냄. 분류번호가 낮을 수록 맨 위에 해당 카테고리가 위치함.
+
+  parentId Int? /// @type int
+
+  mainPostings MainPosting[]
+}
+
+model MainPostingReport {
+  id BigInt @id @default(autoincrement()) /// @type int
+  title String 
+  content String @db.Text
+
+  mainPostingId BigInt  /// @type int
+
+  MainPosting MainPosting @relation(fields: [mainPostingId], references: [id])
+}
