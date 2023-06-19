@@ -20,6 +20,7 @@ import {
 import { dateAndBigIntToString } from 'src/utils/functions/date-and-bigint-to-string.function';
 import { AdminEntity } from '../models/admin/admin.entity';
 import {
+  SelectFindAdminForListForCommonDto,
   SelectFindAdminInfoForCommonDto,
   SelectFindOneAdminExceptPasswordDto,
 } from '../dtos/select/admin-select.dto';
@@ -74,15 +75,15 @@ export class AdminRepository implements AdminRepositoryOutboundPort {
   }
 
   async findAdminList(
-    options: Partial<
-      Pick<AdminEntity.Admin, 'email' | 'nickname' | 'gradeId' | 'id'>
-    >,
-  ): Promise<FindAdminForListForCommonDto[] | null> {
+    options: AdminOptionsDto,
+  ): Promise<FindAdminForListForCommonDto | null> {
     const admins = await this.prisma.admin.findMany({
-      select: typia.random<TypeToSelect<FindAdminForListForCommonDto>>(),
+      select: typia.random<TypeToSelect<SelectFindAdminForListForCommonDto>>(),
     });
 
-    return dateAndBigIntToString(admins);
+    const res = { admins };
+
+    return dateAndBigIntToString(res);
   }
 
   async updateAdmin(

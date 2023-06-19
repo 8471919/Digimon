@@ -11,7 +11,6 @@ export interface FindAdminInfoForCommonDto
   mainPostings: MainPostingEntity.MainPosting[];
 }
 
-export type FindAdminForListForCommonDto = Omit<
-  FindAdminInfoForCommonDto,
-  'mainPostings'
->;
+export type FindAdminForListForCommonDto = {
+  admins: Omit<FindAdminInfoForCommonDto, 'mainPostings'>[];
+};

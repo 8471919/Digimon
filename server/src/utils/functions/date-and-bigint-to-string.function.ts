@@ -7,6 +7,10 @@ export function dateAndBigIntToString<T extends object>(
     return null;
   }
 
+  if (target instanceof Array) {
+    return target;
+  }
+
   try {
     const res = Object.entries(target).reduce((acc, [key, value]) => {
       if (value === null) {

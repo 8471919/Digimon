@@ -25,7 +25,7 @@ export namespace AdminEntity {
     introduction: string | null;
 
     /**
-     * @format date
+     * @format date-time
      */
     birth: string;
 

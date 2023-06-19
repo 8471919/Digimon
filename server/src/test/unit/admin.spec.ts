@@ -15,7 +15,6 @@ import { AdminController } from 'src/domain/admin/admin.controller';
 import { AdminService } from 'src/domain/admin/admin.service';
 import typia from 'typia';
 import { MockAdminRepository } from './mock/admin.repository.mock';
-import { OmitAmongObject } from 'src/utils/types/omit-among-object.type';
 
 describe('Admin Spec', () => {
   describe('1. Validate Admin', () => {
@@ -30,7 +29,10 @@ describe('Admin Spec', () => {
       );
       const authController = new AuthController(authService);
 
-      const res = await authController.adminSignIn(user);
+      const res = await authController.adminSignIn(user, {
+        email: 'test@gmail.com',
+        password: '1234',
+      });
 
       expect(res.accessToken).toBeDefined();
     });
@@ -153,7 +155,7 @@ describe('Admin Spec', () => {
     it('4-1. 어드민 목록을 불러옵니다.', async () => {
       const createAdmin = typia.createRandom<FindAdminForListForCommonDto>();
 
-      const admins = [createAdmin(), createAdmin(), createAdmin()];
+      const admins = createAdmin();
 
       const adminService = new AdminService(
         new MockAdminRepository({

@@ -10,3 +10,8 @@ export type SelectFindOneAdminExceptPasswordDto = {
 export type SelectFindAdminInfoForCommonDto = {
   [P in keyof FindAdminInfoForCommonDto as `${P}`]: FindAdminInfoForCommonDto[P];
 };
+
+export type SelectFindAdminForListForCommonDto = Omit<
+  FindAdminInfoForCommonDto,
+  'mainPostings'
+>;
