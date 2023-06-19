@@ -21,6 +21,9 @@ import { JwtMasterAdminGuard } from './guards/jwt-master-admin.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  /**
+   * @tag Auth
+   */
   @UseGuards(AdminGuard)
   @TypedRoute.Post('admin-login')
   async adminSignIn(
@@ -41,6 +44,9 @@ export class AuthController {
   //   return this.authService.adminSignUp(adminInfo);
   // }
 
+  /**
+   * @tag Auth
+   */
   @UseGuards(JwtMasterAdminGuard)
   @TypedRoute.Post('sign-up-by-master')
   async signUpByMaster(

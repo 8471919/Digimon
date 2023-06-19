@@ -20,6 +20,9 @@ import {
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+  /**
+   * @tag Admin
+   */
   @TypedRoute.Get('list')
   async getAdminList(): Promise<FindAdminForListForCommonDto> {
     const admins = await this.adminService.getAdminList({});
@@ -27,6 +30,9 @@ export class AdminController {
     return admins;
   }
 
+  /**
+   * @tag Admin
+   */
   @UseGuards(JwtAdminGuard)
   @TypedRoute.Get(':id')
   async getAdminInfoForSelf(
@@ -42,6 +48,9 @@ export class AdminController {
     return admin;
   }
 
+  /**
+   * @tag Admin
+   */
   @TypedRoute.Get(':id/info')
   async getAdminInfoForCommon(
     @TypedParam('id') id: number,
@@ -51,6 +60,9 @@ export class AdminController {
     return admin;
   }
 
+  /**
+   * @tag Admin
+   */
   @UseGuards(JwtAdminGuard)
   @TypedRoute.Put(':id/password')
   async modifyPassword(
@@ -69,6 +81,9 @@ export class AdminController {
     return admin;
   }
 
+  /**
+   * @tag Admin
+   */
   @UseGuards(JwtAdminGuard)
   @TypedRoute.Put(':id/nickname')
   async modifyNickname(
@@ -87,6 +102,9 @@ export class AdminController {
     return admin;
   }
 
+  /**
+   * @tag Admin
+   */
   @UseGuards(JwtAdminGuard)
   @TypedRoute.Put(':id/email')
   async modifyEmail(
@@ -105,6 +123,9 @@ export class AdminController {
     return admin;
   }
 
+  /**
+   * @tag Admin
+   */
   @UseGuards(JwtAdminGuard)
   @TypedRoute.Put(':id')
   async modifyAdminInfo(
