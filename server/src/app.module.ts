@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './domain/admin/admin.module';
 import { ConfigModule } from '@nestjs/config';
+import { MainPostingCategoryModule } from './domain/main-posting-catogory/main-posting-category.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     AuthModule,
     AdminModule,
+    MainPostingCategoryModule,
   ],
   controllers: [],
   providers: [],
