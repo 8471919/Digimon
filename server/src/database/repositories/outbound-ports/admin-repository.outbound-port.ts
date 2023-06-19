@@ -35,5 +35,5 @@ export interface AdminRepositoryOutboundPort {
 
   findAdminList(
     options: AdminOptionsDto,
-  ): Promise<FindAdminForListForCommonDto[] | null>;
+  ): Promise<FindAdminForListForCommonDto | null>;
 }

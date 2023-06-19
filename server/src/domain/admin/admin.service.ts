@@ -46,7 +46,7 @@ export class AdminService {
 
   async getAdminList(
     options: AdminOptionsDto,
-  ): Promise<FindAdminForListForCommonDto[]> {
+  ): Promise<FindAdminForListForCommonDto> {
     const admins = await this.adminRepo.findAdminList(options);
 
     if (!admins) {

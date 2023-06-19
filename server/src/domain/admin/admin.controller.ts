@@ -21,10 +21,10 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @TypedRoute.Get('list')
-  async getAdminList(): Promise<{ admins: FindAdminForListForCommonDto[] }> {
+  async getAdminList(): Promise<FindAdminForListForCommonDto> {
     const admins = await this.adminService.getAdminList({});
 
-    return { admins };
+    return admins;
   }
 
   @UseGuards(JwtAdminGuard)
