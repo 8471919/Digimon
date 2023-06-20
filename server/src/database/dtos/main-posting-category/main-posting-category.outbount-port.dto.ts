@@ -12,3 +12,7 @@ export type CreateMainPostingCategoriesInputDto = {
 export type CreateManyMainPostingCategoryOutputDto = {
   createdCategories: number;
 };
+
+export type FindCategoryListDto = {
+  categories: MainPostingCategoryEntity[];
+};

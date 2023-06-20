@@ -4,6 +4,7 @@ import { MainPostingCategoryRepositoryOutbountPort } from './outbound-ports/main
 import {
   CreateMainPostingCategoriesInputDto,
   CreateManyMainPostingCategoryOutputDto,
+  FindCategoryListDto,
 } from '../dtos/main-posting-category/main-posting-category.outbount-port.dto';
 import { MainPostingCategoryEntity } from '../models/main-posting/main-posting-category.entity';
 
@@ -31,6 +32,19 @@ export class MainPostingCategoryRepository
   ): Promise<MainPostingCategoryEntity | null> {
     const category = await this.prisma.mainPostingCategory.findFirst({
       where: { id: categoryId },
+    });
+
+    return category;
+  }
+
+  async updateCategory(
+    data: MainPostingCategoryEntity,
+  ): Promise<MainPostingCategoryEntity | null> {
+    const { id, ...input } = data;
+
+    const category = await this.prisma.mainPostingCategory.update({
+      data: input,
+      where: { id },
     });
 
     return category;
