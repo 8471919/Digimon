@@ -69,7 +69,7 @@ model MainPosting {
 model MainPostingCategory {
   id Int @id @default(autoincrement())  /// @type int
   name String @unique
-  orderId Int?  /// @type int // 해당 카테고리의 분류번호를 나타냄. 분류번호가 낮을 수록 맨 위에 해당 카테고리가 위치함.
+  orderId Int /// @type int // 해당 카테고리의 분류번호를 나타냄. 분류번호가 낮을 수록 맨 위에 해당 카테고리가 위치함.
 
   parentId Int? /// @type int
 

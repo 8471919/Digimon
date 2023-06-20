@@ -9,7 +9,7 @@ export interface MainPostingCategoryEntity {
   /**
    * @type int
    */
-  parentId: number;
+  parentId: number | null;
 
   /**
    * @type int
