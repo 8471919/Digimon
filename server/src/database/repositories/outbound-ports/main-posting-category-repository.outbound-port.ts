@@ -1,3 +1,4 @@
+import { IsDeletedOutputDto } from 'src/database/dtos/common/crud-bool.dto';
 import {
   CreateMainPostingCategoriesInputDto,
   CreateManyMainPostingCategoryOutputDto,
@@ -28,4 +29,6 @@ export interface MainPostingCategoryRepositoryOutbountPort {
   updateCategories(
     data: MainPostingCategoryEntity[],
   ): Promise<FindCategoryListDto | null>;
+
+  deleteCategory(categoryId: number): Promise<IsDeletedOutputDto>;
 }

@@ -7,6 +7,7 @@ import {
   FindCategoryListDto,
 } from '../dtos/main-posting-category/main-posting-category.outbount-port.dto';
 import { MainPostingCategoryEntity } from '../models/main-posting/main-posting-category.entity';
+import { IsDeletedOutputDto } from '../dtos/common/crud-bool.dto';
 
 @Injectable()
 export class MainPostingCategoryRepository
@@ -64,5 +65,17 @@ export class MainPostingCategoryRepository
     }
 
     return { categories };
+  }
+
+  async deleteCategory(categoryId: number): Promise<IsDeletedOutputDto> {
+    const category = await this.prisma.mainPostingCategory.delete({
+      where: { id: categoryId },
+    });
+
+    if (!category) {
+      return { deleted: false };
+    }
+
+    return { deleted: true };
   }
 }
