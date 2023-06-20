@@ -49,4 +49,20 @@ export class MainPostingCategoryRepository
 
     return category;
   }
+
+  async updateCategories(
+    data: MainPostingCategoryEntity[],
+  ): Promise<FindCategoryListDto | null> {
+    const categories: Array<MainPostingCategoryEntity> = [];
+
+    for (const input of data) {
+      const category = await this.updateCategory(input);
+      if (!category) {
+        throw new BadRequestException('Incorrect option');
+      }
+      categories.push(category);
+    }
+
+    return { categories };
+  }
 }

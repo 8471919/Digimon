@@ -24,4 +24,8 @@ export interface MainPostingCategoryRepositoryOutbountPort {
   updateCategory(
     data: MainPostingCategoryEntity,
   ): Promise<MainPostingCategoryEntity | null>;
+
+  updateCategories(
+    data: MainPostingCategoryEntity[],
+  ): Promise<FindCategoryListDto | null>;
 }
