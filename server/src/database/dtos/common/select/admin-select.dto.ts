@@ -1,7 +1,7 @@
 import {
   FindAdminInfoForCommonDto,
   FindOneAdminExceptPasswordDto,
-} from '../admin/admin.outbound-port.dto';
+} from '../../admin/admin.outbound-port.dto';
 
 export type SelectFindOneAdminExceptPasswordDto = {
   [P in keyof FindOneAdminExceptPasswordDto as `${P}`]: FindOneAdminExceptPasswordDto[P];
