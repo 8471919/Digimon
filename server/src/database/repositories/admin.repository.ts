@@ -23,7 +23,7 @@ import {
   SelectFindAdminForListForCommonDto,
   SelectFindAdminInfoForCommonDto,
   SelectFindOneAdminExceptPasswordDto,
-} from '../dtos/select/admin-select.dto';
+} from '../dtos/common/select/admin-select.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
