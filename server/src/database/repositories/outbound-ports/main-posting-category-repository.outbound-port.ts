@@ -2,6 +2,7 @@ import {
   CreateMainPostingCategoriesInputDto,
   CreateManyMainPostingCategoryOutputDto,
 } from 'src/database/dtos/main-posting-category/main-posting-category.outbount-port.dto';
+import { MainPostingCategoryEntity } from 'src/database/models/main-posting/main-posting-category.entity';
 
 export const MAIN_POSTING_CATEGORY_REPOSITORY_OUTBOUND_PORT =
   'MAIN_POSTING_CATEGORY_REPOSITORY_OUTBOUND_PORT' as const;
@@ -16,4 +17,6 @@ export interface MainPostingCategoryRepositoryOutbountPort {
   insertCategories(
     data: CreateMainPostingCategoriesInputDto,
   ): Promise<CreateManyMainPostingCategoryOutputDto | null>;
+
+  findCategory(categoryId: number): Promise<MainPostingCategoryEntity | null>;
 }

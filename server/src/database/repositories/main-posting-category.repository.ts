@@ -5,6 +5,7 @@ import {
   CreateMainPostingCategoriesInputDto,
   CreateManyMainPostingCategoryOutputDto,
 } from '../dtos/main-posting-category/main-posting-category.outbount-port.dto';
+import { MainPostingCategoryEntity } from '../models/main-posting/main-posting-category.entity';
 
 @Injectable()
 export class MainPostingCategoryRepository
@@ -23,5 +24,15 @@ export class MainPostingCategoryRepository
       throw new BadRequestException('Incorrect option');
     }
     return { createdCategories: categories.count };
+  }
+
+  async findCategory(
+    categoryId: number,
+  ): Promise<MainPostingCategoryEntity | null> {
+    const category = await this.prisma.mainPostingCategory.findFirst({
+      where: { id: categoryId },
+    });
+
+    return category;
   }
 }
