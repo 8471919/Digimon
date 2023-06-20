@@ -1,10 +1,12 @@
 import { MainPostingCategoryEntity } from 'src/database/models/main-posting/main-posting-category.entity';
 
+export type MainPostingCategoryInputDto = Pick<
+  MainPostingCategoryEntity,
+  'name' | 'orderId' | 'parentId'
+>;
+
 export type CreateMainPostingCategoriesInputDto = {
-  categories: Pick<
-    MainPostingCategoryEntity,
-    'name' | 'orderId' | 'parentId'
-  >[];
+  categories: MainPostingCategoryInputDto[];
 };
 
 export type CreateManyMainPostingCategoryOutputDto = {
