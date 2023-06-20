@@ -31,4 +31,6 @@ export interface MainPostingCategoryRepositoryOutbountPort {
   ): Promise<FindCategoryListDto | null>;
 
   deleteCategory(categoryId: number): Promise<IsDeletedOutputDto>;
+
+  deleteCategories(categoryIds: Array<number>): Promise<IsDeletedOutputDto>;
 }

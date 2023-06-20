@@ -78,4 +78,16 @@ export class MainPostingCategoryRepository
 
     return { deleted: true };
   }
+
+  async deleteCategories(categoryIds: number[]): Promise<IsDeletedOutputDto> {
+    for (const categoryId of categoryIds) {
+      const res = await this.deleteCategory(categoryId);
+
+      if (res.deleted === false) {
+        throw new BadRequestException('Incorrect option');
+      }
+    }
+
+    return { deleted: true };
+  }
 }
