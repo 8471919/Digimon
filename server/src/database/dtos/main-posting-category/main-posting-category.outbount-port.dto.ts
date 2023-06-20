@@ -16,3 +16,15 @@ export type CreateManyMainPostingCategoryOutputDto = {
 export type FindCategoryListDto = {
   categories: MainPostingCategoryEntity[];
 };
+
+export type SaveChangesMainPostingCategoryInputDto = {
+  create: Array<Omit<MainPostingCategoryEntity, 'id'>>;
+  update: Array<MainPostingCategoryEntity>;
+  delete: Array<MainPostingCategoryEntity['id']>;
+};
+
+export type SaveChangesMainPostingCategoryOutputDto = {
+  isCreated: boolean;
+  isUpdated: boolean;
+  isDeleted: boolean;
+};

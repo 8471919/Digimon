@@ -5,6 +5,8 @@ import {
   CreateMainPostingCategoriesInputDto,
   CreateManyMainPostingCategoryOutputDto,
   FindCategoryListDto,
+  SaveChangesMainPostingCategoryInputDto,
+  SaveChangesMainPostingCategoryOutputDto,
 } from '../dtos/main-posting-category/main-posting-category.outbount-port.dto';
 import { MainPostingCategoryEntity } from '../models/main-posting/main-posting-category.entity';
 import { IsDeletedOutputDto } from '../dtos/common/crud-bool.dto';
@@ -14,6 +16,87 @@ export class MainPostingCategoryRepository
   implements MainPostingCategoryRepositoryOutbountPort
 {
   constructor(private readonly prisma: PrismaService) {}
+  // 해당 함수를 사용하기 전에, parentId인 category의 parentId가 null인지 확인해야한다.
+  async saveChanges(
+    input: SaveChangesMainPostingCategoryInputDto,
+  ): Promise<SaveChangesMainPostingCategoryOutputDto> {
+    /**
+     * category의 depth는 2가 최대 이므로
+     * 부모의 parentId가 null이 아니라면 에러를 던져야한다.
+     */
+    const parentIds: Set<number> = new Set();
+    input.create.forEach((el, i) => {
+      if (!el.parentId) {
+        return;
+      }
+      parentIds.add(el.parentId);
+    });
+    input.update.forEach((el, i) => {
+      if (!el.parentId) {
+        return;
+      }
+      parentIds.add(el.parentId);
+    });
+
+    // 부모의 parentId가 null인 경우만 통과
+    for (const parentId of parentIds) {
+      const parent = await this.findCategory(parentId);
+
+      if (!parent) {
+        throw new BadRequestException('Incorrect option');
+      }
+
+      if (parent.parentId) {
+        throw new BadRequestException('depth is more than 2');
+      }
+    }
+
+    /**
+     * delete하는 카테고리가 상위 카테고리면 삭제가 불가능하다.
+     * 따라서 parentId가 null아면 에러를 던진다.
+     */
+    for (const id of input.delete) {
+      const category = await this.findCategory(id);
+      if (!category) {
+        throw new BadRequestException('Incorrect option');
+      }
+
+      if (!category.parentId) {
+        throw new BadRequestException(
+          'Top-level categories can not be cleared',
+        );
+      }
+    }
+
+    // 변경 도중 에러가 발생하면 롤백해야하므로 트랜잭션을 건다.
+    const res = await this.prisma.$transaction(async (tx) => {
+      // 삭제
+      for (const id of input.delete) {
+        const isDeleted = await tx.mainPostingCategory.delete({
+          where: { id },
+        });
+      }
+
+      // 수정
+      for (const category of input.update) {
+        const { id, ...data } = category;
+
+        const isUpdated = await tx.mainPostingCategory.update({
+          data: data,
+          where: { id },
+        });
+      }
+
+      // 생성
+      const isCreated = await tx.mainPostingCategory.createMany({
+        data: input.create,
+      });
+
+      return { isDeleted: true, isUpdated: true, isCreated: true };
+    });
+
+    return res;
+  }
 
   async insertCategories(
     data: CreateMainPostingCategoriesInputDto,

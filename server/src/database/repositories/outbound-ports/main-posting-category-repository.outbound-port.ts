@@ -3,6 +3,8 @@ import {
   CreateMainPostingCategoriesInputDto,
   CreateManyMainPostingCategoryOutputDto,
   FindCategoryListDto,
+  SaveChangesMainPostingCategoryInputDto,
+  SaveChangesMainPostingCategoryOutputDto,
 } from 'src/database/dtos/main-posting-category/main-posting-category.outbount-port.dto';
 import { MainPostingCategoryEntity } from 'src/database/models/main-posting/main-posting-category.entity';
 
@@ -16,6 +18,10 @@ export const MAIN_POSTING_CATEGORY_REPOSITORY_OUTBOUND_PORT =
  * select을 한 번 더 하는 것은 문제가 되지 않을 것이라고 판단. (join말고, select)
  */
 export interface MainPostingCategoryRepositoryOutbountPort {
+  saveChanges(
+    input: SaveChangesMainPostingCategoryInputDto,
+  ): Promise<SaveChangesMainPostingCategoryOutputDto>;
+
   insertCategories(
     data: CreateMainPostingCategoriesInputDto,
   ): Promise<CreateManyMainPostingCategoryOutputDto | null>;
