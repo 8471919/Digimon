@@ -20,7 +20,11 @@ export type FindCategoryListDto = {
 export type SaveChangesMainPostingCategoryInputDto = Partial<{
   create: Array<Omit<MainPostingCategoryEntity, 'id'>>;
   update: Array<MainPostingCategoryEntity>;
-  delete: Array<MainPostingCategoryEntity['id']>;
+
+  /**
+   * @type int
+   */
+  delete: Array<number>;
 }>;
 
 export type SaveChangesMainPostingCategoryOutputDto = {
