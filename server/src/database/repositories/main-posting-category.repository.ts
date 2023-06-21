@@ -25,13 +25,13 @@ export class MainPostingCategoryRepository
      * 부모의 parentId가 null이 아니라면 에러를 던져야한다.
      */
     const parentIds: Set<number> = new Set();
-    input.create.forEach((el, i) => {
+    input.create?.forEach((el, i) => {
       if (!el.parentId) {
         return;
       }
       parentIds.add(el.parentId);
     });
-    input.update.forEach((el, i) => {
+    input.update?.forEach((el, i) => {
       if (!el.parentId) {
         return;
       }
@@ -55,44 +55,62 @@ export class MainPostingCategoryRepository
      * delete하는 카테고리가 상위 카테고리면 삭제가 불가능하다.
      * 따라서 parentId가 null아면 에러를 던진다.
      */
-    for (const id of input.delete) {
-      const category = await this.findCategory(id);
-      if (!category) {
-        throw new BadRequestException('Incorrect option');
-      }
 
-      if (!category.parentId) {
-        throw new BadRequestException(
-          'Top-level categories can not be cleared',
-        );
+    if (input.delete) {
+      for (const id of input.delete) {
+        const category = await this.findCategory(id);
+        if (!category) {
+          throw new BadRequestException('Incorrect option');
+        }
+
+        if (!category.parentId) {
+          throw new BadRequestException(
+            'Top-level categories can not be cleared',
+          );
+        }
       }
     }
 
     // 변경 도중 에러가 발생하면 롤백해야하므로 트랜잭션을 건다.
     const res = await this.prisma.$transaction(async (tx) => {
+      const res: SaveChangesMainPostingCategoryOutputDto = {
+        isCreated: false,
+        isUpdated: false,
+        isDeleted: false,
+      };
+
       // 삭제
-      for (const id of input.delete) {
-        const isDeleted = await tx.mainPostingCategory.delete({
-          where: { id },
-        });
+      if (input.delete) {
+        for (const id of input.delete) {
+          const isDeleted = await tx.mainPostingCategory.delete({
+            where: { id },
+          });
+        }
+        res.isDeleted = true;
       }
 
       // 수정
-      for (const category of input.update) {
-        const { id, ...data } = category;
+      if (input.update) {
+        for (const category of input.update) {
+          const { id, ...data } = category;
 
-        const isUpdated = await tx.mainPostingCategory.update({
-          data: data,
-          where: { id },
-        });
+          const isUpdated = await tx.mainPostingCategory.update({
+            data: data,
+            where: { id },
+          });
+        }
+        res.isUpdated = true;
       }
 
       // 생성
-      const isCreated = await tx.mainPostingCategory.createMany({
-        data: input.create,
-      });
+      if (input.create) {
+        const isCreated = await tx.mainPostingCategory.createMany({
+          data: input.create,
+        });
+        res.isCreated = true;
+      }
 
-      return { isDeleted: true, isUpdated: true, isCreated: true };
+      return res;
     });
 
     return res;

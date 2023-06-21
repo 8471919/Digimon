@@ -17,11 +17,11 @@ export type FindCategoryListDto = {
   categories: MainPostingCategoryEntity[];
 };
 
-export type SaveChangesMainPostingCategoryInputDto = {
+export type SaveChangesMainPostingCategoryInputDto = Partial<{
   create: Array<Omit<MainPostingCategoryEntity, 'id'>>;
   update: Array<MainPostingCategoryEntity>;
   delete: Array<MainPostingCategoryEntity['id']>;
-};
+}>;
 
 export type SaveChangesMainPostingCategoryOutputDto = {
   isCreated: boolean;
