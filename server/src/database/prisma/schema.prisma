@@ -73,6 +73,9 @@ model MainPostingCategory {
 
   parentId Int? /// @type int
 
+  parent MainPostingCategory? @relation("ParentChilds", fields: [parentId], references: [id])
+  childs MainPostingCategory[] @relation("ParentChilds")
+
   mainPostings MainPosting[]
 }
 
