@@ -6,6 +6,7 @@ import { User } from 'src/common/decorators/user.decorator';
 import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
 import { ADMIN_GRADE } from 'src/database/values/admin-grade.value';
 import {
+  FindAllCategoriesDto,
   SaveChangesMainPostingCategoryInputDto,
   SaveChangesMainPostingCategoryOutputDto,
 } from 'src/database/dtos/main-posting-category/main-posting-category.outbount-port.dto';
@@ -15,6 +16,20 @@ export class MainPostingCategoryController {
   constructor(
     private readonly mainPostingCategoryService: MainPostingCategoryService,
   ) {}
+
+  @UseGuards(JwtMasterAdminGuard)
+  @TypedRoute.Get('list')
+  async getAllCategories(
+    @User() user: AdminLogInDto,
+  ): Promise<FindAllCategoriesDto> {
+    if (user.gradeId !== ADMIN_GRADE.master) {
+      throw new UnauthorizedException('UnAuthorized');
+    }
+
+    const categories = await this.mainPostingCategoryService.getAllCategories();
+
+    return categories;
+  }
 
   @UseGuards(JwtMasterAdminGuard)
   @TypedRoute.Put()
