@@ -3,6 +3,7 @@ import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './domain/admin/admin.module';
 import { ConfigModule } from '@nestjs/config';
 import { MainPostingCategoryModule } from './domain/main-posting-catogory/main-posting-category.module';
+import { MainPostingModule } from './domain/main-posting/main-posting.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { MainPostingCategoryModule } from './domain/main-posting-catogory/main-p
     AuthModule,
     AdminModule,
     MainPostingCategoryModule,
+    MainPostingModule,
   ],
   controllers: [],
   providers: [],
