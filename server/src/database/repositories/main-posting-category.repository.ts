@@ -4,6 +4,7 @@ import { MainPostingCategoryRepositoryOutbountPort } from './outbound-ports/main
 import {
   CreateMainPostingCategoriesInputDto,
   CreateManyMainPostingCategoryOutputDto,
+  FindAllCategoriesDto,
   FindCategoryListDto,
   SaveChangesMainPostingCategoryInputDto,
   SaveChangesMainPostingCategoryOutputDto,
@@ -16,6 +17,7 @@ export class MainPostingCategoryRepository
   implements MainPostingCategoryRepositoryOutbountPort
 {
   constructor(private readonly prisma: PrismaService) {}
+
   // 해당 함수를 사용하기 전에, parentId인 category의 parentId가 null인지 확인해야한다.
   async saveChanges(
     input: SaveChangesMainPostingCategoryInputDto,
@@ -137,6 +139,19 @@ export class MainPostingCategoryRepository
     });
 
     return category;
+  }
+
+  async findAllCategories(): Promise<FindAllCategoriesDto | null> {
+    const categories = await this.prisma.mainPostingCategory.findMany({
+      where: {
+        parentId: null,
+      },
+      include: {
+        childs: true,
+      },
+    });
+
+    return { categories };
   }
 
   async updateCategory(

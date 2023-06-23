@@ -3,6 +3,7 @@ import { MockMainPostingCategoryRepository } from './mock/main-posting-category.
 import { MainPostingCategoryController } from 'src/domain/main-posting-catogory/main-posting-category.controller';
 import typia from 'typia';
 import {
+  FindAllCategoriesDto,
   SaveChangesMainPostingCategoryInputDto,
   SaveChangesMainPostingCategoryOutputDto,
 } from 'src/database/dtos/main-posting-category/main-posting-category.outbount-port.dto';
@@ -47,6 +48,29 @@ describe('MainPostingCategory Spec', () => {
   });
 
   describe('2. Read Category List', () => {
-    it.todo('2-1. 카테고리 목록을 불러옵니다.');
+    it('2-1. 카테고리 목록을 불러옵니다.', async () => {
+      const user: AdminLogInDto = {
+        id: 1,
+        gradeId: 1,
+        email: 'test@gmail.com',
+        nickname: 'sloth',
+      };
+
+      const categories = typia.random<FindAllCategoriesDto>();
+
+      const mainPostingCategoryService = new MainPostingCategoryService(
+        new MockMainPostingCategoryRepository({
+          findAllCategories: [categories],
+        }),
+      );
+
+      const mainPostingCategoryController = new MainPostingCategoryController(
+        mainPostingCategoryService,
+      );
+
+      const res = await mainPostingCategoryController.getAllCategories(user);
+
+      expect(res).toStrictEqual(categories);
+    });
   });
 });

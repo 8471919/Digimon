@@ -17,6 +17,12 @@ export type FindCategoryListDto = {
   categories: MainPostingCategoryEntity[];
 };
 
+export type FindAllCategoriesDto = {
+  categories: (MainPostingCategoryEntity & {
+    childs: MainPostingCategoryEntity[];
+  })[];
+};
+
 export type SaveChangesMainPostingCategoryInputDto = Partial<{
   create: Array<Omit<MainPostingCategoryEntity, 'id'>>;
   update: Array<MainPostingCategoryEntity>;

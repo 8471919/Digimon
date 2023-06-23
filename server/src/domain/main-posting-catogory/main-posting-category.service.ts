@@ -1,5 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
+  FindAllCategoriesDto,
   SaveChangesMainPostingCategoryInputDto,
   SaveChangesMainPostingCategoryOutputDto,
 } from 'src/database/dtos/main-posting-category/main-posting-category.outbount-port.dto';
@@ -21,5 +22,15 @@ export class MainPostingCategoryService {
     const res = this.mainPostingCategoryRepo.saveChanges(data);
 
     return res;
+  }
+
+  async getAllCategories(): Promise<FindAllCategoriesDto> {
+    const categories = await this.mainPostingCategoryRepo.findAllCategories();
+
+    if (!categories) {
+      throw new NotFoundException('no categories');
+    }
+
+    return categories;
   }
 }
