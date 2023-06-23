@@ -17,6 +17,9 @@ export class MainPostingCategoryController {
     private readonly mainPostingCategoryService: MainPostingCategoryService,
   ) {}
 
+  /**
+   * @tag MainPostingCategory
+   */
   @UseGuards(JwtMasterAdminGuard)
   @TypedRoute.Get('list')
   async getAllCategories(
@@ -31,6 +34,9 @@ export class MainPostingCategoryController {
     return categories;
   }
 
+  /**
+   * @tag MainPostingCategory
+   */
   @UseGuards(JwtMasterAdminGuard)
   @TypedRoute.Put()
   async saveCategoryChanges(
