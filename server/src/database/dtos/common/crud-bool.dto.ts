@@ -1,15 +1,15 @@
 export type IsCreatedOutputDto = {
-  created: boolean;
+  isCreated: boolean;
 };
 
 export type IsReadOutputDto = {
-  read: boolean;
+  isRead: boolean;
 };
 
 export type IsUpdatedOutputDto = {
-  updated: boolean;
+  isUpdated: boolean;
 };
 
 export type IsDeletedOutputDto = {
-  deleted: boolean;
+  isDeleted: boolean;
 };
