@@ -1,3 +1,4 @@
+import { IsDeletedOutputDto } from 'src/database/dtos/common/crud-bool.dto';
 import {
   CreateMainPostingInputDto,
   FindMainPostingOptionsDto,
@@ -21,4 +22,9 @@ export interface MainPostingRepositoryOutboundPort {
     id: string,
     data: CreateMainPostingInputDto,
   ): Promise<MainPostingEntity.MainPosting | null>;
+
+  deleteMainPosting(
+    mainPostingId: string,
+    adminId: number,
+  ): Promise<IsDeletedOutputDto | null>;
 }
