@@ -1,3 +1,4 @@
+import { IsDeletedOutputDto } from 'src/database/dtos/common/crud-bool.dto';
 import {
   CreateMainPostingInputDto,
   FindMainPostingOptionsDto,
@@ -47,6 +48,19 @@ export class MockMainPostingRepository
     data: CreateMainPostingInputDto,
   ): Promise<MainPostingEntity.MainPosting | null> {
     const res = await this.result.updateMainPosting?.pop();
+
+    if (res === undefined) {
+      throw new Error('undefined');
+    }
+
+    return res;
+  }
+
+  async deleteMainPosting(
+    mainPostingId: string,
+    adminId: number,
+  ): Promise<IsDeletedOutputDto | null> {
+    const res = await this.result.deleteMainPosting?.pop();
 
     if (res === undefined) {
       throw new Error('undefined');
