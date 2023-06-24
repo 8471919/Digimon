@@ -4,3 +4,7 @@ export type CreateMainPostingInputDto = Pick<
   MainPostingEntity.MainPosting,
   'title' | 'content' | 'categoryId'
 >;
+
+export type FindMainPostingOptionsDto = Partial<
+  Pick<MainPostingEntity.MainPosting, 'id' | 'adminId' | 'categoryId'>
+>;

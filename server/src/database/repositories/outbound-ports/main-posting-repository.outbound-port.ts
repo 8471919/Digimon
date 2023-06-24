@@ -1,4 +1,7 @@
-import { CreateMainPostingInputDto } from 'src/database/dtos/main-posting/main-posting.outbound-port.dto';
+import {
+  CreateMainPostingInputDto,
+  FindMainPostingOptionsDto,
+} from 'src/database/dtos/main-posting/main-posting.outbound-port.dto';
 import { MainPostingEntity } from 'src/database/models/main-posting/main-posting.entity';
 
 export const MAIN_POSTING_REPOSITORY_OUTBOUND_PORT =
@@ -10,8 +13,12 @@ export interface MainPostingRepositoryOutboundPort {
     data: CreateMainPostingInputDto,
   ): Promise<MainPostingEntity.MainPosting | null>;
 
+  findMainPosting(
+    options: FindMainPostingOptionsDto,
+  ): Promise<MainPostingEntity.MainPosting | null>;
+
   updateMainPosting(
-    id: number,
+    id: string,
     data: CreateMainPostingInputDto,
   ): Promise<MainPostingEntity.MainPosting | null>;
 }
