@@ -189,21 +189,21 @@ export class MainPostingCategoryRepository
     });
 
     if (!category) {
-      return { deleted: false };
+      return { isDeleted: false };
     }
 
-    return { deleted: true };
+    return { isDeleted: true };
   }
 
   async deleteCategories(categoryIds: number[]): Promise<IsDeletedOutputDto> {
     for (const categoryId of categoryIds) {
       const res = await this.deleteCategory(categoryId);
 
-      if (res.deleted === false) {
+      if (res.isDeleted === false) {
         throw new BadRequestException('Incorrect option');
       }
     }
 
-    return { deleted: true };
+    return { isDeleted: true };
   }
 }

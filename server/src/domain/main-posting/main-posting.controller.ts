@@ -5,6 +5,8 @@ import { JwtAdminGuard } from 'src/auth/guards/jwt-admin.guard';
 import { User } from 'src/common/decorators/user.decorator';
 import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
 import { CreateMainPostingInputDto } from 'src/database/dtos/main-posting/main-posting.outbound-port.dto';
+import { IsDeletedOutputDto } from 'src/database/dtos/common/crud-bool.dto';
+import { MainPostingEntity } from 'src/database/models/main-posting/main-posting.entity';
 
 @Controller('api/v1/main-posting')
 export class MainPostingController {
@@ -32,7 +34,7 @@ export class MainPostingController {
     @TypedBody() body: CreateMainPostingInputDto,
     @TypedParam('id') id: string,
     @User() user: AdminLogInDto,
-  ) {
+  ): Promise<MainPostingEntity.MainPosting> {
     const mainPosting = await this.mainPostingService.modifyMainPosting(
       id,
       user.id,
@@ -42,5 +44,19 @@ export class MainPostingController {
     );
 
     return mainPosting;
+  }
+
+  @UseGuards(JwtAdminGuard)
+  @TypedRoute.Delete(':id')
+  async removeMainPosting(
+    @TypedParam('id') id: string,
+    @User() user: AdminLogInDto,
+  ): Promise<IsDeletedOutputDto> {
+    const isDeleted = await this.mainPostingService.removeMainPosting(
+      id,
+      user.id,
+    );
+
+    return isDeleted;
   }
 }

@@ -4,6 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { IsDeletedOutputDto } from 'src/database/dtos/common/crud-bool.dto';
 import { CreateMainPostingInputDto } from 'src/database/dtos/main-posting/main-posting.outbound-port.dto';
 import { MainPostingEntity } from 'src/database/models/main-posting/main-posting.entity';
 import {
@@ -58,5 +59,21 @@ export class MainPostingService {
     }
 
     return mainPosting;
+  }
+
+  async removeMainPosting(
+    mainPostingId: string,
+    adminId: number,
+  ): Promise<IsDeletedOutputDto> {
+    const isDeleted = await this.mainPostingRepo.deleteMainPosting(
+      mainPostingId,
+      adminId,
+    );
+
+    if (!isDeleted) {
+      throw new UnauthorizedException('UnAuthorized');
+    }
+
+    return isDeleted;
   }
 }

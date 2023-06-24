@@ -81,7 +81,34 @@ describe('MainPosting Spec', () => {
   });
 
   describe('4. Delete MainPosting', () => {
-    it.todo('4-1. 메인포스팅을 삭제합니다.');
+    it('4-1. 메인포스팅을 삭제합니다.', async () => {
+      const user: AdminLogInDto = {
+        id: 1,
+        gradeId: 1,
+        email: 'test@gmail.com',
+        nickname: 'sloth',
+      };
+
+      const mainPostingService = new MainPostingService(
+        new MockMainPostingRepository({
+          deleteMainPosting: [
+            {
+              isDeleted: true,
+            },
+          ],
+        }),
+      );
+
+      const mainPostingController = new MainPostingController(
+        mainPostingService,
+      );
+
+      const res = await mainPostingController.removeMainPosting('1', user);
+
+      expect(res).toStrictEqual({
+        isDeleted: true,
+      });
+    });
   });
 
   describe('5. Read MainPosting List', () => {
