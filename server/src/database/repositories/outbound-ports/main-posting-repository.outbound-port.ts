@@ -9,4 +9,9 @@ export interface MainPostingRepositoryOutboundPort {
     adminId: number,
     data: CreateMainPostingInputDto,
   ): Promise<MainPostingEntity.MainPosting | null>;
+
+  updateMainPosting(
+    id: number,
+    data: CreateMainPostingInputDto,
+  ): Promise<MainPostingEntity.MainPosting | null>;
 }

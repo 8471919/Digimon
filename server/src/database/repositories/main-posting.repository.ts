@@ -21,4 +21,16 @@ export class MainPostingRepository
 
     return dateAndBigIntToString(mainPosting);
   }
+
+  async updateMainPosting(
+    id: number,
+    data: CreateMainPostingInputDto,
+  ): Promise<MainPostingEntity.MainPosting | null> {
+    const mainPosting = await this.prisma.mainPosting.update({
+      data: data,
+      where: { id },
+    });
+
+    return dateAndBigIntToString(mainPosting);
+  }
 }
