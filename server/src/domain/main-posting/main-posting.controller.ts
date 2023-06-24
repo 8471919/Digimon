@@ -1,6 +1,6 @@
-import { Controller, UseGuards } from '@nestjs/common';
+import { Controller, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { MainPostingService } from './main-posting.service';
-import { TypedBody, TypedRoute } from '@nestia/core';
+import { TypedBody, TypedParam, TypedRoute } from '@nestia/core';
 import { JwtAdminGuard } from 'src/auth/guards/jwt-admin.guard';
 import { User } from 'src/common/decorators/user.decorator';
 import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
@@ -17,6 +17,24 @@ export class MainPostingController {
     @User() user: AdminLogInDto,
   ) {
     const mainPosting = await this.mainPostingService.createMainPosting(
+      user.id,
+      {
+        ...body,
+      },
+    );
+
+    return mainPosting;
+  }
+
+  @UseGuards(JwtAdminGuard)
+  @TypedRoute.Put(':id')
+  async modifyMainPosting(
+    @TypedBody() body: CreateMainPostingInputDto,
+    @TypedParam('id') id: string,
+    @User() user: AdminLogInDto,
+  ) {
+    const mainPosting = await this.mainPostingService.modifyMainPosting(
+      id,
       user.id,
       {
         ...body,
