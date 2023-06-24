@@ -1,6 +1,41 @@
+import { MainPostingService } from 'src/domain/main-posting/main-posting.service';
+import { MockMainPostingRepository } from './mock/main-posting.repository.mock';
+import { MainPostingController } from 'src/domain/main-posting/main-posting.controller';
+import typia from 'typia';
+import { MainPostingEntity } from 'src/database/models/main-posting/main-posting.entity';
+import { CreateMainPostingInputDto } from 'src/database/dtos/main-posting/main-posting.outbound-port.dto';
+import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
+
 describe('MainPosting Spec', () => {
   describe('1. Create MainPosting', () => {
-    it.todo('1-1. 메인포스팅을 생성합니다.');
+    it('1-1. 메인포스팅을 생성합니다.', async () => {
+      const user: AdminLogInDto = {
+        id: 1,
+        gradeId: 1,
+        email: 'test@gmail.com',
+        nickname: 'sloth',
+      };
+
+      const mainPosting = typia.random<MainPostingEntity.MainPosting>();
+
+      const body = typia.random<CreateMainPostingInputDto>();
+
+      const output = { ...mainPosting, ...body };
+
+      const mainPostingService = new MainPostingService(
+        new MockMainPostingRepository({
+          insertMainPosting: [output],
+        }),
+      );
+
+      const mainPostingController = new MainPostingController(
+        mainPostingService,
+      );
+
+      const res = await mainPostingController.createMainPosting(body, user);
+
+      expect(res).toStrictEqual(output);
+    });
   });
 
   describe('2. Read MainPosting', () => {
