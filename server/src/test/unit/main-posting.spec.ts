@@ -43,7 +43,41 @@ describe('MainPosting Spec', () => {
   });
 
   describe('3. Update MainPosting', () => {
-    it.todo('3-1. 메인포스팅을 수정합니다.');
+    it('3-1. 메인포스팅을 수정합니다.', async () => {
+      const user: AdminLogInDto = {
+        id: 1,
+        gradeId: 1,
+        email: 'test@gmail.com',
+        nickname: 'sloth',
+      };
+
+      const mainPosting = typia.random<MainPostingEntity.MainPosting>();
+
+      const body: CreateMainPostingInputDto = {
+        title: mainPosting.title,
+        content: mainPosting.content,
+        categoryId: mainPosting.categoryId,
+      };
+
+      const mainPostingService = new MainPostingService(
+        new MockMainPostingRepository({
+          findMainPosting: [mainPosting],
+          updateMainPosting: [mainPosting],
+        }),
+      );
+
+      const mainPostingController = new MainPostingController(
+        mainPostingService,
+      );
+
+      const res = await mainPostingController.modifyMainPosting(
+        body,
+        mainPosting.id,
+        user,
+      );
+
+      expect(res).toStrictEqual(mainPosting);
+    });
   });
 
   describe('4. Delete MainPosting', () => {
