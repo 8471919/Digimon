@@ -1,6 +1,6 @@
 export interface MainPostingReportEntity {
   /**
-   * @pattern ^[1-9][0-9]{1,17}
+   * @pattern ^[1-9][0-9]{0,17}
    */
   id: string;
 
@@ -9,7 +9,7 @@ export interface MainPostingReportEntity {
   content: string;
 
   /**
-   * @pattern ^[1-9][0-9]{1,17}
+   * @pattern ^[1-9][0-9]{0,17}
    */
   mainPostingId: string;
 }
