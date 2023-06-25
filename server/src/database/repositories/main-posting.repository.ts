@@ -3,11 +3,16 @@ import { MainPostingRepositoryOutboundPort } from './outbound-ports/main-posting
 import { PrismaService } from '../prisma/prisma.service';
 import {
   CreateMainPostingInputDto,
+  FindMainPostingListOptionsForPagenationDto,
+  FindMainPostingListOutputDto,
   FindMainPostingOptionsDto,
 } from '../dtos/main-posting/main-posting.outbound-port.dto';
 import { MainPostingEntity } from '../models/main-posting/main-posting.entity';
 import { dateAndBigIntToString } from 'src/utils/functions/date-and-bigint-to-string.function';
 import { IsDeletedOutputDto } from '../dtos/common/crud-bool.dto';
+import typia from 'typia';
+import { SelectFindMainPostingListDto } from '../dtos/common/select/main-posting-select.dto';
+import { TypeToSelect } from 'src/utils/types/type-to-select.type';
 
 @Injectable()
 export class MainPostingRepository
@@ -43,6 +48,30 @@ export class MainPostingRepository
     });
 
     return dateAndBigIntToString(mainPosting);
+  }
+
+  async findMainPostings(
+    options: FindMainPostingListOptionsForPagenationDto,
+  ): Promise<FindMainPostingListOutputDto | null> {
+    const { pageNumber, countPerPage, ...sortOptions } = options;
+
+    const { order, ...whereOptions } = sortOptions;
+
+    const mainPostings = await this.prisma.mainPosting.findMany({
+      select: typia.random<TypeToSelect<SelectFindMainPostingListDto>>(),
+      where: whereOptions.options,
+      orderBy: order
+        ? {
+            [order.type]: order.order,
+          }
+        : undefined,
+      take: countPerPage,
+      skip: (pageNumber - 1) * countPerPage,
+    });
+
+    const res = { mainPostings };
+
+    return dateAndBigIntToString(res);
   }
 
   async updateMainPosting(
