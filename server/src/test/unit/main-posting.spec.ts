@@ -43,7 +43,23 @@ describe('MainPosting Spec', () => {
   });
 
   describe('2. Read MainPosting', () => {
-    it.todo('2-1. 메인포스팅을 상세 내용을 불러옵니다.');
+    it('2-1. 메인포스팅을 상세 내용을 불러옵니다.', async () => {
+      const mainPosting = typia.random<MainPostingEntity.MainPosting>();
+
+      const mainPostingService = new MainPostingService(
+        new MockMainPostingRepository({
+          findMainPosting: [mainPosting],
+        }),
+      );
+
+      const mainPostingController = new MainPostingController(
+        mainPostingService,
+      );
+
+      const res = await mainPostingController.getMainPosting(mainPosting.id);
+
+      expect(res).toStrictEqual(mainPosting);
+    });
   });
 
   describe('3. Update MainPosting', () => {
