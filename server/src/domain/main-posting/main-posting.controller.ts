@@ -43,6 +43,13 @@ export class MainPostingController {
     return mainPostings;
   }
 
+  @TypedRoute.Get(':id')
+  async getMainPosting(@TypedParam('id') id: string) {
+    const mainPosting = await this.mainPostingService.getMainPosting({ id });
+
+    return mainPosting;
+  }
+
   @UseGuards(JwtAdminGuard)
   @TypedRoute.Post()
   async createMainPosting(
