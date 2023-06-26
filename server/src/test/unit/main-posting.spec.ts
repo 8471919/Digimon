@@ -3,8 +3,12 @@ import { MockMainPostingRepository } from './mock/main-posting.repository.mock';
 import { MainPostingController } from 'src/domain/main-posting/main-posting.controller';
 import typia from 'typia';
 import { MainPostingEntity } from 'src/database/models/main-posting/main-posting.entity';
-import { CreateMainPostingInputDto } from 'src/database/dtos/main-posting/main-posting.outbound-port.dto';
+import {
+  CreateMainPostingInputDto,
+  FindMainPostingListOutputDto,
+} from 'src/database/dtos/main-posting/main-posting.outbound-port.dto';
 import { AdminLogInDto } from 'src/database/dtos/auth/admin-login.dto';
+import { MainPostingPagenationQueryInputDto } from 'src/database/dtos/main-posting/main-posting.inbound-port.dto';
 
 describe('MainPosting Spec', () => {
   describe('1. Create MainPosting', () => {
@@ -112,7 +116,25 @@ describe('MainPosting Spec', () => {
   });
 
   describe('5. Read MainPosting List', () => {
-    it.todo('5-1. 메인포스팅 목록을 불러옵니다.');
+    it('5-1. 메인포스팅 목록을 불러옵니다.', async () => {
+      const mainPostings = typia.random<FindMainPostingListOutputDto>();
+
+      const query = typia.random<MainPostingPagenationQueryInputDto>();
+
+      const mainPostingService = new MainPostingService(
+        new MockMainPostingRepository({
+          findMainPostings: [mainPostings],
+        }),
+      );
+
+      const mainPostingController = new MainPostingController(
+        mainPostingService,
+      );
+
+      const res = await mainPostingController.getMainPostingList(query);
+
+      expect(res).toStrictEqual(mainPostings);
+    });
   });
 
   describe('6. Read MainPosting and MainPosting Category for Main Page', () => {

@@ -18,7 +18,12 @@ export function dateAndBigIntToString<T extends object>(
       }
 
       if (value instanceof Array) {
-        return { ...acc, [key]: value };
+        return {
+          ...acc,
+          [key]: value.map((el) => {
+            return dateAndBigIntToString(el);
+          }),
+        };
       }
 
       if (value instanceof Date) {

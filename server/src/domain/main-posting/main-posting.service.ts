@@ -5,7 +5,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { IsDeletedOutputDto } from 'src/database/dtos/common/crud-bool.dto';
-import { CreateMainPostingInputDto } from 'src/database/dtos/main-posting/main-posting.outbound-port.dto';
+import {
+  CreateMainPostingInputDto,
+  FindMainPostingListOptionsForPagenationDto,
+  FindMainPostingListOutputDto,
+} from 'src/database/dtos/main-posting/main-posting.outbound-port.dto';
 import { MainPostingEntity } from 'src/database/models/main-posting/main-posting.entity';
 import {
   MAIN_POSTING_REPOSITORY_OUTBOUND_PORT,
@@ -33,6 +37,18 @@ export class MainPostingService {
     }
 
     return mainPosting;
+  }
+
+  async getMainPostingList(
+    options: FindMainPostingListOptionsForPagenationDto,
+  ): Promise<FindMainPostingListOutputDto> {
+    const mainPostings = await this.mainPostingRepo.findMainPostings(options);
+
+    if (!mainPostings) {
+      throw new BadRequestException('Incorrect option');
+    }
+
+    return mainPostings;
   }
 
   async modifyMainPosting(

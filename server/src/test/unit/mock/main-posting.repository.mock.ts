@@ -1,6 +1,8 @@
 import { IsDeletedOutputDto } from 'src/database/dtos/common/crud-bool.dto';
 import {
   CreateMainPostingInputDto,
+  FindMainPostingListOptionsForPagenationDto,
+  FindMainPostingListOutputDto,
   FindMainPostingOptionsDto,
 } from 'src/database/dtos/main-posting/main-posting.outbound-port.dto';
 import { MainPostingEntity } from 'src/database/models/main-posting/main-posting.entity';
@@ -43,6 +45,19 @@ export class MockMainPostingRepository
 
     return res;
   }
+
+  async findMainPostings(
+    options: FindMainPostingListOptionsForPagenationDto,
+  ): Promise<FindMainPostingListOutputDto | null> {
+    const res = await this.result.findMainPostings?.pop();
+
+    if (res === undefined) {
+      throw new Error('undefined');
+    }
+
+    return res;
+  }
+
   async updateMainPosting(
     id: string,
     data: CreateMainPostingInputDto,
