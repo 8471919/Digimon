@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { IsDeletedOutputDto } from 'src/database/dtos/common/crud-bool.dto';
@@ -46,7 +47,7 @@ export class MainPostingService {
     const mainPosting = await this.mainPostingRepo.findMainPosting(options);
 
     if (!mainPosting) {
-      throw new BadRequestException('incorrect option');
+      throw new NotFoundException('not found');
     }
 
     return mainPosting;
