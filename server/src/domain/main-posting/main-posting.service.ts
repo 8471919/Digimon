@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { IsDeletedOutputDto } from 'src/database/dtos/common/crud-bool.dto';
@@ -9,6 +10,7 @@ import {
   CreateMainPostingInputDto,
   FindMainPostingListOptionsForPagenationDto,
   FindMainPostingListOutputDto,
+  FindMainPostingOptionsDto,
 } from 'src/database/dtos/main-posting/main-posting.outbound-port.dto';
 import { MainPostingEntity } from 'src/database/models/main-posting/main-posting.entity';
 import {
@@ -34,6 +36,18 @@ export class MainPostingService {
 
     if (!mainPosting) {
       throw new BadRequestException('Incorrect option');
+    }
+
+    return mainPosting;
+  }
+
+  async getMainPosting(
+    options: FindMainPostingOptionsDto,
+  ): Promise<MainPostingEntity.MainPosting> {
+    const mainPosting = await this.mainPostingRepo.findMainPosting(options);
+
+    if (!mainPosting) {
+      throw new NotFoundException('not found');
     }
 
     return mainPosting;
